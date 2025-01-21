@@ -1,11 +1,25 @@
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+// import NavBar from '../NavBar';
+import Landing from './Pages/Landing';
+import Voorwaarden from './Pages/voorwaarden';
+// import Login from './Pages/notfound';
+// import Register from './Pages/notfound';
+import NotFound from './Pages/notfound';
 
-function App() {
+const App = () => {
   return (
-    <div className="border border-gray-500">
-      <p className="border border-grey-500 p-4 text-3xl">hallo</p>
+    <div>
+      {/* <NavBar /> */}
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/voorwaarden" element={<Voorwaarden />} />
+        {/* <Route path="/" element={<Login />} />
+        <Route path="/" element={<Register />} /> */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
