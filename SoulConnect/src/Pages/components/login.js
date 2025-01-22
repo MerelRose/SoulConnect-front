@@ -44,7 +44,7 @@ function Home({ showModal, setShowModal }) {
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center ml-0 bg-black bg-opacity-50">
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Login</h2>
                         <form

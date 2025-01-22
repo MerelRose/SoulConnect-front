@@ -23,6 +23,24 @@ function Registration({ showModal, setShowModal }) {
         e.preventDefault();
         const API_KEY = '*anker'; // Access the API key from the environment variable
 
+        // Password validation
+        if (formData.password.length < 16) {
+            setErrorMessage('Password must be at least 16 characters long.');
+            return;
+        }
+
+        // Age validation
+        const birthDate = new Date(formData.geboortedatum);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const isAdult = age > 18 || (age === 18 && monthDiff >= 0);
+
+        if (!isAdult) {
+            setErrorMessage('You must be at least 18 years old to register.');
+            return;
+        }
+
         // Log the data being sent
         console.log('Data being sent to the server:', formData);
 
@@ -59,7 +77,7 @@ function Registration({ showModal, setShowModal }) {
         <>
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="p-6 bg-white rounded-lg shadow-lg w-96">
+                    <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Register</h2>
                         <form onSubmit={handleSubmit}>
                             {errorMessage && <div className="mt-4 text-red-500">{errorMessage}</div>}
@@ -73,7 +91,7 @@ function Registration({ showModal, setShowModal }) {
                                 id="username"
                                 name="username"
                                 placeholder="Username"
-                                className="w-full p-2 mb-4 bg-gray-100 border rounded-lg"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={formData.username}
                                 onChange={handleChange}
                                 required
@@ -87,7 +105,7 @@ function Registration({ showModal, setShowModal }) {
                                 id="email"
                                 name="email"
                                 placeholder="Email"
-                                className="w-full p-2 bg-gray-100 border rounded-lg mb- 4"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
@@ -101,7 +119,7 @@ function Registration({ showModal, setShowModal }) {
                                 id="password"
                                 name="password"
                                 placeholder="Password"
-                                className="w-full p-2 mb-4 bg-gray-100 border rounded-lg"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
@@ -115,7 +133,7 @@ function Registration({ showModal, setShowModal }) {
                                 id="postcode"
                                 name="postcode"
                                 placeholder="Postcode"
-                                className="w-full p-2 mb-4 bg-gray-100 border rounded-lg"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={formData.postcode}
                                 onChange={handleChange}
                                 required
@@ -128,7 +146,7 @@ function Registration({ showModal, setShowModal }) {
                                 type="date"
                                 id="geboortedatum"
                                 name="geboortedatum"
-                                className="w-full p-2 mb-4 bg-gray-100 border rounded-lg"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={formData.geboortedatum}
                                 onChange={handleChange}
                                 required
@@ -136,14 +154,14 @@ function Registration({ showModal, setShowModal }) {
 
                             <button
                                 type="submit"
-                                className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                                className="w-full py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
                             >
                                 Register
                             </button>
                         </form>
                         <button
                             onClick={() => setShowModal(false)}
-                            className="mt-4 text-blue-600 underline"
+                            className="w-full py-2 mt-4 bg-gray-300 rounded-lg hover:bg-gray-400"
                         >
                             Close
                         </button>
