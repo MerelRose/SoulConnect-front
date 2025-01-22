@@ -13,8 +13,8 @@ function Home({ showModal, setShowModal }) {
     const navigate = useNavigate();
 
     // Access the API key from the environment variable
-    const API_KEY = process.env.REACT_APP_API_KEY;
-    const API_ENDPOINT = 'http://localhost:3001/login';
+    const API_KEY = '*anker';
+    const API_ENDPOINT = 'http://localhost:4200/login';
 
     const handleLogin = async () => {
         try {

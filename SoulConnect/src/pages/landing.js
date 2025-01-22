@@ -6,6 +6,7 @@ import sea from '../img/carousel/sea.jpg';
 import sign from '../img/carousel/sign.jpg';
 import sunset from '../img/carousel/sunset.jpg';
 import Home from './components/login';
+import Registration from './components/register';
 
 const images = [
     sunset,
@@ -14,8 +15,22 @@ const images = [
     sign
   ];
 
+  
+
 const Landing = () => {
-  const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const [formType, setFormType] = useState('login'); // New state to track form type
+
+    const handleLoginClick = () => {
+        setFormType('login'); // Set form type to login
+        setShowModal(true); // Show the modal
+    };
+
+    const handleRegisterClick = () => {
+        setFormType('register'); // Set form type to register
+        setShowModal(true); // Show the modal
+    };
   
   return (
 <div className="flex-1 overflow-y-auto w-fit h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px]bg-zinc-900	">
@@ -35,15 +50,28 @@ const Landing = () => {
         <div>
             <button
                 className="relative w-32 p-4 text-lg font-bold transition-all duration-200 transform bg-white rounded-full h-fit font-lora top-20 hover:bg-red-950 hover:text-white hover:shadow-lg hover:scale-105"
-                onClick={() => setShowModal(true)}
+                onClick={handleLoginClick} // Use the login handler
             >
                 Login
             </button>
 
-            {/* Pass Modal State to Home */}
-            <Home showModal={showModal} setShowModal={setShowModal} />
+            {/* Conditional rendering based on formType */}
+            {showModal && formType === 'login' && (
+                <Home showModal={showModal} setShowModal={setShowModal} />
+            )}
+
+            <button 
+                onClick={handleRegisterClick} // Use the register handler
+                className="relative w-32 p-4 text-lg font-bold transition-all duration-200 transform bg-white rounded-full h-fit font-lora top-20 hover:bg-red-950 hover:text-white hover:shadow-lg hover:scale-105"
+            >
+                Register
+            </button>
+
+            {/* Conditional rendering based on formType */}
+            {showModal && formType === 'register' && (
+                <Registration showModal={showModal} setShowModal={setShowModal} />
+            )}
         </div>
-            <button className='relative w-32 p-4 text-lg font-bold bg-white rounded-full h-fit font-lora top-20'>Register</button>
       </div>
       
     <div className="absolute flex items-center justify-center w-auto h-96 top-96 right-24">
