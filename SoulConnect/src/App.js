@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-route
 import logo from './img/logo.png';
 import cover from './img/cover.png';
 import './styles/App.css';
-import Landing from './Pages/landing';
+import Landing from './Pages/Landing';
 
 // Header component
 function Header() {
