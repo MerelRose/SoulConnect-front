@@ -1,9 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'; // Add useNavigate here
 import logo from './img/logo.png';
 import cover from './img/cover.png';
 import './styles/App.css';
 import Landing from './Pages/landing';
+import { AuthProvider } from './authcontext';
+import Home from './Pages/components/login';
 
 // Header component
 function Header() {
@@ -55,6 +57,7 @@ const App = () => {
           {/* Default Route to Landing Page */}
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </main>
       <Footer />
@@ -65,7 +68,9 @@ const App = () => {
 const AppWithRouter = () => {
   return (
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   );
 };

@@ -22,7 +22,7 @@ const ImageCarousel = ({ images }) => {
         <img
           src={images[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}
-          className="object-cover w-full h-64"
+          className="object-cover w-full h-96"
         />
       </div>
 

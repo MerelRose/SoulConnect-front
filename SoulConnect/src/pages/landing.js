@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import holding from '../img/holding.jpg';
 import ImageCarousel from './components/carousel';
 import bikes from '../img/carousel/bikes.jpg';
 import sea from '../img/carousel/sea.jpg';
 import sign from '../img/carousel/sign.jpg';
 import sunset from '../img/carousel/sunset.jpg';
+import Home from './components/login';
 
 const images = [
     sunset,
@@ -14,6 +15,8 @@ const images = [
   ];
 
 const Landing = () => {
+  const [showModal, setShowModal] = useState(false);
+  
   return (
 <div className="flex-1 overflow-y-auto w-fit h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px]bg-zinc-900	">
         <div className='absolute w-2/4 p-6 m-5 text-white shadow-2xl rounded-3xl font-lora h-min'>
@@ -29,11 +32,21 @@ const Landing = () => {
             className="shadow-2xl rounded-3xl w-96 h-"
             alt="hand holding"
             />
-            <button className='relative w-32 p-4 text-lg font-bold bg-white rounded-full h-fit font-lora top-20'>Login</button>
+        <div>
+            <button
+                className="relative w-32 p-4 text-lg font-bold transition-all duration-200 transform bg-white rounded-full h-fit font-lora top-20 hover:bg-red-950 hover:text-white hover:shadow-lg hover:scale-105"
+                onClick={() => setShowModal(true)}
+            >
+                Login
+            </button>
+
+            {/* Pass Modal State to Home */}
+            <Home showModal={showModal} setShowModal={setShowModal} />
+        </div>
             <button className='relative w-32 p-4 text-lg font-bold bg-white rounded-full h-fit font-lora top-20'>Register</button>
       </div>
       
-    <div className="absolute flex items-center justify-center w-auto h-96 top-96 right-11">
+    <div className="absolute flex items-center justify-center w-auto h-96 top-96 right-24">
       <ImageCarousel images={images} />
     </div>
     
