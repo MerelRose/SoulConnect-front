@@ -1,10 +1,10 @@
 import React from 'react';
 import holding from '../img/holding.jpg';
 import ImageCarousel from './components/carousel';
-import bikes from '../img/carousel/bikes.jpg';
-import sea from '../img/carousel/sea.jpg';
-import sign from '../img/carousel/sign.jpg';
-import sunset from '../img/carousel/sunset.jpg';
+import bikes from '../img/carousel-img/bikes.jpg';
+import sea from '../img/carousel-img/sea.jpg';
+import sign from '../img/carousel-img/sign.jpg';
+import sunset from '../img/carousel-img/sunset.jpg';
 
 const images = [
     sunset,
