@@ -1,71 +1,106 @@
-import { Link } from "react-router-dom";
+//de knop moet nog gedisabled worden tot de gebruiker onderaan is
+//de progress bar moet onderaan blijven
 
-export default function voorwaarden (){
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+export default function Voorwaarden() {
+    const [scrollProgress, setScrollProgress] = useState(0);
+
+    const handleScroll = (e) => {
+        const element = e.target;
+        const scrollTop = element.scrollTop;
+        const scrollHeight = element.scrollHeight - element.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        setScrollProgress(progress);
+    };
+  
     return (
-        <div className="border border-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4/5 w-3/5 rounded-xl mx-auto">
-            <div className="h-4/5">
-            <h1 className="text-5xl text-center mt-20 mb-10">Voorwaarden</h1>
-            <div className="text-lg text-center">
-                <p>
-                1. Definities
-                1.1. Website: De SoulConnect-datingsite, inclusief alle subdomeinen en mobiele applicaties.
-                1.2. Gebruiker: Iedere persoon die de website bezoekt, een account aanmaakt of gebruik maakt van de diensten.
-                1.3. Diensten: Alle functionaliteiten en services die via de website worden aangeboden, zoals profielen aanmaken, berichten versturen, en matches zoeken.
-                </p>
-                <p>
-                2. Toepasselijkheid
-                2.1. Deze algemene voorwaarden zijn van toepassing op alle gebruikers van SoulConnect.
-                2.2. Door het aanmaken van een account en gebruik te maken van de diensten, stemt de gebruiker in met deze voorwaarden.
-                </p>
-                <p>
-                3. Gebruikersaccount
-                3.1. Gebruikers dienen minimaal 18 jaar oud te zijn.
-                3.2. Het is verboden om een vals profiel aan te maken of zich voor te doen als een ander persoon.
-                3.3. Gebruikers zijn verantwoordelijk voor het vertrouwelijk houden van hun inloggegevens.
-                </p>
-                <p>
-                4. Gebruik van de diensten
-                4.1. Het is verboden om content te plaatsen die:
-                </p>
-                <p>
-                Beledigend, discriminerend, of pornografisch van aard is.
-                Schending vormt van auteursrechten of andere rechten van derden.
-                4.2. SoulConnect behoudt zich het recht voor om accounts of content te verwijderen die in strijd zijn met deze voorwaarden.
-                </p>
-                <p>
-                5. Betalingen
-                5.1. Bepaalde functies van SoulConnect kunnen alleen worden gebruikt via een betaald abonnement.
-                5.2. Betalingen zijn niet restitueerbaar, tenzij wettelijk verplicht.
-                </p>
-                <p>
-                6. Privacy en gegevensbescherming
-                6.1. SoulConnect respecteert de privacy van gebruikers en handelt volgens de geldende privacywetgeving.
-                6.2. Meer informatie over de verwerking van persoonsgegevens staat in onze [Privacyverklaring](link naar privacyverklaring).
-                </p>
-                <p>
-                7. Aansprakelijkheid
-                7.1. SoulConnect biedt geen garanties voor het vinden van een match of het succes van relaties.
-                7.2. SoulConnect is niet aansprakelijk voor schade voortvloeiend uit het gebruik van de website, behalve in gevallen van opzet of grove nalatigheid.
-                </p>
-                <p>
-                8. Beëindiging
-                8.1. Gebruikers kunnen hun account op elk moment beëindigen.
-                8.2. SoulConnect behoudt zich het recht voor om accounts te beëindigen bij misbruik of schending van deze voorwaarden.
-                </p>
-                <p>
-                9. Wijzigingen
-                9.1. SoulConnect behoudt zich het recht voor om deze voorwaarden te wijzigen.
-                9.2. Wijzigingen worden aangekondigd via de website. Voortgezet gebruik van de diensten na wijziging impliceert acceptatie.
-                </p>
-                <p>
-                    10. Toepasselijk recht
-                    10.1. Op deze voorwaarden is het recht van [Land] van toepassing.
-                    10.2. Geschillen worden voorgelegd aan de bevoegde rechter in [Plaats].
-                </p>
-                </div>
-            <div className="h-1/5 mt-5">
-            <Link to="/Register" className='mx-auto bg-blue-500 hover:bg-blue-700 text-white w-80 font-bold py-2 px-4 rounded-md absolute -translate-x-1/2 left-1/2 text-center'>accept</Link>
+        <div className="bg-cover bg-scroll">
+            <div
+          className="border border-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4/5 overflow-auto w-3/4 rounded-xl mx-auto"
+          onScroll={handleScroll}
+            >
+          <div className="h-4/5">
+            <h1 className="text-5xl text-center mt-20 mb-10">Algemene Voorwaarden</h1>
+            <h1 className='text-7xl text-center mt-5 mb-10'>SoulConnect</h1>
+            <h3 className="text-xl text-left">Laatst bijgewerkt: [Datum]</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">1. Definities</h2>
+            <h3 className="text-xl text-left">1.1. Website: De SoulConnect-datingsite, inclusief alle subdomeinen en mobiele applicaties.</h3>
+            <h3 className="text-xl text-left">1.2. Gebruiker: Iedere persoon die de website bezoekt, een account aanmaakt of gebruik maakt van de diensten.</h3>
+            <h3 className="text-xl text-left">1.3. Diensten: Alle functionaliteiten en services die via de website worden aangeboden.</h3>
+            <h3 className="text-xl text-left">1.4. Persoonsgegevens: Alle informatie over een geïdentificeerde of identificeerbare natuurlijke persoon, zoals gedefinieerd in de AVG.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">2. Toepasselijkheid</h2>
+            <h3 className="text-xl text-left">2.1. Deze algemene voorwaarden zijn van toepassing op alle gebruikers van SoulConnect.</h3>
+            <h3 className="text-xl text-left">2.2. Door een account aan te maken en gebruik te maken van de diensten, stemt de gebruiker in met deze voorwaarden en onze <Link to="/Privacyverklaring" className="underline">Privacyverklaring</Link>.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">3. Gebruikersaccount</h2>
+            <h3 className="text-xl text-left">3.1. Gebruikers dienen minimaal 18 jaar oud te zijn.</h3>
+            <h3 className="text-xl text-left">3.2. Gebruikers verklaren dat de verstrekte informatie juist en volledig is.</h3>
+            <h3 className="text-xl text-left">3.3. Gebruikers zijn verantwoordelijk voor het vertrouwelijk houden van hun inloggegevens.</h3>
+            <h3 className="text-xl text-left">3.4. Gebruikers kunnen hun gegevens op elk moment inzien, corrigeren of verwijderen via hun accountinstellingen.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">4. Gebruik van persoonsgegevens</h2>
+            <h3 className="text-xl text-left">4.1. Verwerkingsdoelen: SoulConnect verwerkt persoonsgegevens uitsluitend voor de volgende doeleinden:</h3>
+            <h3 className="text-xl text-left">- Het aanmaken en beheren van gebruikersaccounts.</h3>
+            <h3 className="text-xl text-left">- Het faciliteren van matches en communicatie tussen gebruikers.</h3>
+            <h3 className="text-xl text-left">- Het verbeteren van de diensten, inclusief personalisatie.</h3>
+            <h3 className="text-xl text-left">- Het naleven van wettelijke verplichtingen.</h3>
+            <h3 className="text-xl text-left">4.2. Grondslag voor verwerking: De verwerking van persoonsgegevens vindt plaats op basis van toestemming van de gebruiker en/of de uitvoering van een overeenkomst.</h3>
+            <h3 className="text-xl text-left">4.3. Rechten van gebruikers: Gebruikers hebben de volgende rechten onder de AVG:</h3>
+            <h3 className="text-xl text-left">- Recht op inzage: Gebruikers kunnen een kopie van hun persoonsgegevens opvragen.</h3>
+            <h3 className="text-xl text-left">- Recht op rectificatie: Gebruikers kunnen onjuiste gegevens corrigeren.</h3>
+            <h3 className="text-xl text-left">- Recht op verwijdering: Gebruikers kunnen hun gegevens laten verwijderen ("recht om vergeten te worden").</h3>
+            <h3 className="text-xl text-left">- Recht op beperking: Gebruikers kunnen vragen om de verwerking van hun gegevens te beperken.</h3>
+            <h3 className="text-xl text-left">- Recht op gegevensoverdraagbaarheid: Gebruikers kunnen hun gegevens in een gestructureerd, gangbaar formaat ontvangen.</h3>
+            <h3 className="text-xl text-left">- Recht van bezwaar: Gebruikers kunnen bezwaar maken tegen de verwerking van hun gegevens.</h3>
+            <h3 className="text-xl text-left">4.4. Contact voor privacyvragen: Gebruikers kunnen privacy-gerelateerde vragen of verzoeken indienen via [e-mailadres].</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">5. Beveiliging van gegevens</h2>
+            <h3 className="text-left">5.1. SoulConnect neemt passende technische en organisatorische maatregelen om persoonsgegevens te beschermen tegen verlies, ongeoorloofde toegang, en andere vormen van onrechtmatige verwerking.</h3>
+            <h3 className="text-left">5.2. In geval van een datalek dat waarschijnlijk een hoog risico oplevert voor de rechten van gebruikers, zal SoulConnect de betrokkenen en de autoriteiten onmiddellijk informeren.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">6. Verwerkers en derden</h2>
+            <h3 className="text-xl text-left">6.1. Persoonsgegevens worden niet gedeeld met derden, tenzij:</h3>
+            <h3 className="text-xl text-left">- Dit noodzakelijk is voor de levering van de diensten (bijvoorbeeld hostingproviders).</h3>
+            <h3 className="text-xl text-left">- Dit wettelijk verplicht is.</h3>
+            <h3 className="text-xl text-left">- De gebruiker expliciete toestemming heeft gegeven.</h3>
+            <h3 className="text-xl text-left">6.2. SoulConnect heeft verwerkersovereenkomsten met derden die persoonsgegevens verwerken namens SoulConnect, in overeenstemming met de AVG.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">7. Bewaartermijn</h2>
+            <h3 className="text-xl text-left">7.1. Persoonsgegevens worden bewaard zolang dat noodzakelijk is voor de doeleinden waarvoor ze zijn verzameld of zolang als wettelijk vereist.</h3>
+            <h3 className="text-xl text-left">7.2. Na beëindiging van het account worden persoonsgegevens binnen [X dagen] verwijderd, tenzij wettelijke verplichtingen een langere bewaartermijn vereisen.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">8. Cookies</h2>
+            <h3 className="text-xl text-left">8.1. SoulConnect gebruikt cookies en vergelijkbare technologieën. Details hierover staan beschreven in onze <Link to="/Cookieverklaring" className="underline">Cookieverklaring</Link>.</h3>
+            <h3 className="text-xl text-left">8.2. Gebruikers kunnen hun cookievoorkeuren instellen bij het eerste bezoek aan de website.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">9. Wijzigingen</h2>
+            <h3 className="text-xl text-left">9.1. SoulConnect behoudt zich het recht voor om deze voorwaarden te wijzigen.</h3>
+            <h3 className="text-xl text-left">9.2. Wijzigingen worden aangekondigd via de website. Voortgezet gebruik van de diensten na wijziging impliceert acceptatie.</h3>
+  
+            <h2 className="text-3xl mt-10 text-left">10. Toepasselijk recht</h2>
+            <h3 className="text-xl text-left">10.1. Op deze voorwaarden is het recht van [Land] van toepassing.</h3>
+            <h3 className="text-xl text-left">10.2. Geschillen worden voorgelegd aan de bevoegde rechter in [Plaats].</h3>
+          </div>
+  
+          <div className="sticky bottom-0 h-1/6 mt-5 bg-white">
+            <div className="relative w-full h-3 bg-gray-200">
+                <div
+                    className="absolute top-0 left-0 h-full bg-blue-500"
+                    style={{ width: `${scrollProgress}%` }}
+                ></div>
             </div>
-            </div>
+            <Link
+                to="/Register"
+                className=":disabled:opacity-75 bg-blue-500 text-white font-bold items-center justify-center rounded flex inline-block mt-5 w-2/5 h-3/5 text-center m-auto"
+            >
+                Accept
+            </Link>
         </div>
-        )};
+      </div>
+      </div>
+    );
+}
