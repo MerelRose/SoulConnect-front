@@ -4,6 +4,7 @@ import logo from './img/logo.png';
 import cover from './img/cover.png';
 import './styles/App.css';
 import Landing from './Pages/landing';
+import Dashboard from './Pages/dashboard';
 import { AuthProvider } from './authcontext';
 import Home from './Pages/components/login';
 
@@ -57,6 +58,7 @@ const App = () => {
           {/* Default Route to Landing Page */}
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/home" element={<Home />} />
         </Routes>
       </main>

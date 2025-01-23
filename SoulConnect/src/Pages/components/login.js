@@ -33,7 +33,7 @@ function Home({ showModal, setShowModal }) {
             setErrorMessage('');
 
             login(userData);
-            navigate('/home');
+            navigate('/dashboard');
         } catch (error) {
             setErrorMessage(error.response?.data?.message || error.message || 'Login failed');
             setSuccessMessage('');
