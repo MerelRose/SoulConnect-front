@@ -1,60 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-function Profiel() {
-  const [users, setUsers] = useState([]);
+export default function Profile() {
+  const { id } = useParams();
+  const [profile, setProfile] = useState([]);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:') 
+    fetch(`http://localhost:5000/profile/$`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then((data) => setUsers(data))
+      .then((data) => setProfile(data))
       .catch((err) => {
-        console.error('Error fetching Profile:', err);
+        console.error('Error fetching profile:', err);
         setError(err.message);
       });
-  }, []);
-
-  const filteredUsers = users.filter((user) => {
-    return (
-      user.title.toLowerCase().includes(filter.toLowerCase()) ||
-      user.author.toLowerCase().includes(filter.toLowerCase()) ||
-      user.description.toLowerCase().includes(filter.toLowerCase())
-    );
-  });
+  }, [id]);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   return (
-    <div className="flex flex-wrap justify-center space-x-8 align-center w-screen">
-      <NavBar />
-      <div className="flex justify-center">
-        <input
-          type="text"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Search Profile..."
-          className="w-full h-10 p-2 mb-4 border-2 border-gray-400 rounded-lg"
-        />
-      </div>
-
-      {filteredUsers.map((user) => (
-        <div key={user.id} className='w-1/2 h-96 p-4 border-4 border-black rounded-lg m-10'>
-          <div className='text-2xl'>{user.nickname}</div>
-          <div className='text-lg'>{user.gender}</div>
-          <div className='text-sm'>{user.description}</div>
-          <div className='text-xl font-bold'>${user.price}</div>
+    <div className="flex justify-center">
+      {profile.map((Profile) => (
+        <div key={Profile.id} className="w-screen h-screen border border-8 border-black">
+          <div className="text-7xl">{Profile.nickname}</div>
+          <div className="text-lg">{Profile.oneliner}</div>
+          <div className="text-sm">{Profile.waarderen}</div>
+          <div className="text-base font-bold">{Profile.birth}</div>
         </div>
       ))}
     </div>
   );
 }
-
-export default Profiel;
