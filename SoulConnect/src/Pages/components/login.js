@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/App.css';
 import { useAuth } from '../../authcontext';
-
+//test
 function Home({ showModal, setShowModal }) {
     const { login } = useAuth();
     const [email, setEmail] = useState('');
