@@ -7,6 +7,7 @@ const Dashboard = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]); // State for filtered users
   const [filters, setFilters] = useState({
     zoekt: '',
     gender: '',
@@ -28,6 +29,7 @@ const Dashboard = () => {
           },
         });
         setUsers(response.data);
+        setFilteredUsers(response.data); // Initialize filtered users
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -43,7 +45,7 @@ const Dashboard = () => {
 
   const applyFilters = () => {
     // Filter users based on the selected filters
-    const filteredUsers = users.filter((user) => {
+    const filtered = users.filter((user) => {
       return (
         (filters.zoekt ? user.zoekt === filters.zoekt : true) &&
         (filters.gender ? user.gender === filters.gender : true) &&
@@ -54,7 +56,20 @@ const Dashboard = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
-    setUsers(filteredUsers);
+    setFilteredUsers(filtered); // Update filtered users
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      zoekt: '',
+      gender: '',
+      soort: '',
+      huisdier: '',
+      muziek: '',
+      kinderen: '',
+    });
+    setSearchTerm('');
+    setFilteredUsers(users); // Reset to all users
   };
 
   const toggleUserInfo = async (userId) => {
@@ -141,10 +156,11 @@ const Dashboard = () => {
           <option value="wens">Wens</option>
         </select>
         <button onClick={applyFilters} className="p-2 text-white bg-blue-500 rounded">Apply Filters</button>
+        <button onClick={clearFilters} className="p-2 ml-2 text-white bg-red-500 rounded">Clear Filters</button>
       </div>
       <div className="max-h-[520px] overflow-y-auto">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <div key={user.id} className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-md hover:shadow-lg">
               <h2 className="text-xl font-semibold">{user.username}</h2>
               <p className="text-gray-700">Email: {user.email}</p>
