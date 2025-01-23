@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const API_KEY = '*anker';
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]); // State for filtered users
   const [filters, setFilters] = useState({
     zoekt: '',
     gender: '',
@@ -17,19 +16,17 @@ const Dashboard = () => {
     kinderen: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
-  const [expandedUserId, setExpandedUserId] = useState(null); // State to track which user's info is expanded
+  const [expandedUserId, setExpandedUserId] = useState(null);
 
   useEffect(() => {
-    // Fetch user data on component mount
     const fetchUsers = async () => {
       try {
         const response = await axios.get('http://localhost:4200/users', {
           headers: {
-            'api-key': API_KEY, // Include the API key in the headers
+            'api-key': API_KEY,
           },
         });
         setUsers(response.data);
-        setFilteredUsers(response.data); // Initialize filtered users
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -43,9 +40,8 @@ const Dashboard = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const applyFilters = () => {
-    // Filter users based on the selected filters
-    const filtered = users.filter((user) => {
+  const getFilteredUsers = () => {
+    return users.filter((user) => {
       return (
         (filters.zoekt ? user.zoekt === filters.zoekt : true) &&
         (filters.gender ? user.gender === filters.gender : true) &&
@@ -56,7 +52,6 @@ const Dashboard = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
-    setFilteredUsers(filtered); // Update filtered users
   };
 
   const clearFilters = () => {
@@ -69,23 +64,19 @@ const Dashboard = () => {
       kinderen: '',
     });
     setSearchTerm('');
-    setFilteredUsers(users); // Reset to all users
   };
 
   const toggleUserInfo = async (userId) => {
     if (expandedUserId === userId) {
-      // Collapse the info if it's already expanded
       setExpandedUserId(null);
       return;
     }
 
     try {
-      // Fetch user info by ID
       const response = await axios.get(`http://localhost:4200/info/${userId}`, {
         headers: { 'api-key': API_KEY },
       });
 
-      // Set the expanded user ID and store their info
       setExpandedUserId(userId);
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
@@ -96,6 +87,8 @@ const Dashboard = () => {
       console.error('Error fetching user info:', error);
     }
   };
+
+  const filteredUsers = getFilteredUsers();
 
   return (
     <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px]">
@@ -155,8 +148,9 @@ const Dashboard = () => {
           <option value="nee">Nee</option>
           <option value="wens">Wens</option>
         </select>
-        <button onClick={applyFilters} className="p-2 text-white bg-blue-500 rounded">Apply Filters</button>
-        <button onClick={clearFilters} className="p-2 ml-2 text-white bg-red-500 rounded">Clear Filters</button>
+        <button onClick={clearFilters} className="p-2 ml-2 text-white bg-red-500 rounded">
+          Clear Filters
+        </button>
       </div>
       <div className="max-h-[520px] overflow-y-auto">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
