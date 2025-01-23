@@ -17,6 +17,10 @@ const Dashboard = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [complaintPopupVisible, setComplaintPopupVisible] = useState(false);
+  const [complaintText, setComplaintText] = useState('');
+  const [reportedUserId, setReportedUserId] = useState(null);
+  const loggedInUserId = '123'; // Replace with actual logged-in user ID
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -87,6 +91,41 @@ const Dashboard = () => {
       console.error('Error fetching user info:', error);
     }
   };
+
+  const handleComplaintSubmit = async () => {
+    if (!complaintText || !reportedUserId) {
+      console.log("Complaint text or reported user ID is missing.");
+      return;
+    }
+  
+    try {
+      // Prepare the payload based on the database structure
+      const payload = {
+        user_id: loggedInUserId,  // Sender's user ID
+        reported_id: reportedUserId, // Reported user's ID
+        info: complaintText, // Complaint text
+      };
+  
+      console.log("Submitting complaint with the following payload:", payload);
+  
+      // Send the request to the API
+      await axios.post('http://localhost:4200/meldingen', payload, {
+        headers: {
+          'api-key': API_KEY,
+        },
+      });
+  
+      // Reset the complaint text and close the popup
+      setComplaintText('');
+      setReportedUserId(null);
+      setComplaintPopupVisible(false);
+      alert('Complaint submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+    }
+  };
+  
+  
 
   const filteredUsers = getFilteredUsers();
 
@@ -166,6 +205,12 @@ const Dashboard = () => {
                 <button onClick={() => toggleUserInfo(user.id)} className="px-4 py-2 text-white bg-blue-500 rounded">
                   {expandedUserId === user.id ? 'Hide Info' : 'View Info'}
                 </button>
+                <button onClick={() => {
+                  setReportedUserId(user.id);
+                  setComplaintPopupVisible(true);
+                }} className="px-4 py-2 text-white bg-yellow-500 rounded">
+                  Report
+                </button>
               </div>
               {expandedUserId === user.id && user.expandedInfo && (
                 <div className="p-4 mt-4 border-t border-gray-300">
@@ -186,6 +231,30 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
+
+      {/* Complaint Popup */}
+      {complaintPopupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="p-6 bg-white rounded shadow-lg">
+            <h2 className="mb-4 text-xl font-semibold">Report User</h2>
+            <textarea
+              value={complaintText}
+              onChange={(e) => setComplaintText(e.target.value)}
+              placeholder="Write your complaint here..."
+              className="w-full p-2 border rounded"
+              rows="4"
+            />
+            <div className="mt-4">
+              <button onClick={handleComplaintSubmit} className="px-4 py-2 text-white bg-blue-500 rounded">
+                Submit Complaint
+              </button>
+              <button onClick={() => setComplaintPopupVisible(false)} className="px-4 py-2 ml-2 text-white bg-red-500 rounded">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
