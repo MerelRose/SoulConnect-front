@@ -20,7 +20,8 @@ const Dashboard = () => {
   const [complaintPopupVisible, setComplaintPopupVisible] = useState(false);
   const [complaintText, setComplaintText] = useState('');
   const [reportedUserId, setReportedUserId] = useState(null);
-  const loggedInUserId = '123'; // Replace with actual logged-in user ID
+  const token = localStorage.getItem('token');
+  const loggedInUserId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -124,8 +125,6 @@ const Dashboard = () => {
       console.error('Error submitting complaint:', error);
     }
   };
-  
-  
 
   const filteredUsers = getFilteredUsers();
 

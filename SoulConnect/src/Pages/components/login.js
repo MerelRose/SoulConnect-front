@@ -6,7 +6,7 @@ import { useAuth } from '../../authcontext';
 
 function Home({ showModal, setShowModal }) {
     const { login } = useAuth();
-    const [email, setEmail] = useState('');
+    const [emailOrUsername, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -22,39 +22,38 @@ function Home({ showModal, setShowModal }) {
         try {
             const response = await axios.post(
                 API_ENDPOINT,
-                { email, password },
+                { emailOrUsername, password },
                 { headers: { 'x-api-key': API_KEY } }
             );
     
-            // Log the entire response data for debugging
             console.log('Login Response:', response.data);
     
             const { token, role, user_id, name, verified } = response.data;
     
-            // Log the specific login info
             console.log(`User  Info: 
-                Email: ${email}, 
+                Email: ${emailOrUsername}, 
                 Token: ${token}, 
                 Role: ${role}, 
                 User ID: ${user_id}, 
                 Name: ${name}, 
                 Verified: ${verified}`);
     
-            // Check if the user is verified
             if (verified === 0) {
                 setIsVerified(false);
                 setErrorMessage('Your email is not verified. Please verify your email.');
                 return;
             }
     
-            // If verified, proceed with login
+            // Store token and user ID in local storage
+            localStorage.setItem('token', token);
+            localStorage.setItem('userId', user_id); // Store user ID
+    
             const userData = { token, role, user_id, name };
             setSuccessMessage(`Welcome, ${name}`);
             setErrorMessage('');
             login(userData); 
             navigate('/dashboard');
         } catch (error) {
-            // Handle errors from the API
             setErrorMessage(error.response?.data?.message || error.message || 'Login failed');
             setSuccessMessage('');
             console.error(error);
@@ -65,7 +64,7 @@ function Home({ showModal, setShowModal }) {
         try {
             const response = await axios.post(
                 RESEND_ENDPOINT,
-                { email },
+                { emailOrUsername },
                 { headers: { 'x-api-key': API_KEY } }
             );
 
@@ -88,16 +87,16 @@ function Home({ showModal, setShowModal }) {
                                 handleLogin();
                             }}
                         >
-                            <label htmlFor="email" className="block mb-2 text-lg font-Rubik">
+                            <label htmlFor="emailOrUsername" className="block mb-2 text-lg font-Rubik">
                                 E-mail:
                             </label>
                             <input
                                 type="text"
-                                id="email"
-                                name="email"
+                                id="emailOrUsername"
+                                name="emailOrUsername"
                                 placeholder="School e-mail"
                                 className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
-                                value={email}
+                                value={emailOrUsername}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
 
