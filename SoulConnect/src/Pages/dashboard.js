@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [complaintPopupVisible, setComplaintPopupVisible] = useState(false);
   const [complaintText, setComplaintText] = useState('');
   const [reportedUserId, setReportedUserId] = useState(null);
+  const [likedUsers, setLikedUsers] = useState([]);
   const token = localStorage.getItem('token');
   const loggedInUserId = localStorage.getItem('userId');
 
@@ -126,6 +127,45 @@ const Dashboard = () => {
     }
   };
 
+  const handleLike = async (userId) => {
+    try {
+      const response = await axios.post('http://localhost:4200/likes', {
+        user_id: loggedInUserId,
+        liked_user_id: userId,
+      }, {
+        headers: {
+          'api-key': API_KEY,
+        },
+      });
+  
+      if (response.data.match) {
+        alert('It\'s a match!');
+      }
+  
+      setLikedUsers((prevLikedUsers) => [...prevLikedUsers, userId]);
+    } catch (error) {
+      console.error('Error liking user:', error);
+    }
+  };
+  
+  const handleDislike = async (userId) => {
+    try {
+      await axios.delete('http://localhost:4200/likes', {
+        data: {
+          user_id: loggedInUserId,
+          liked_user_id: userId,
+        },
+        headers: {
+          'api-key': API_KEY,
+        },
+      });
+  
+      setLikedUsers((prevLikedUsers) => prevLikedUsers.filter((id) => id !== userId));
+    } catch (error) {
+      console.error('Error disliking user:', error);
+    }
+  };
+
   const filteredUsers = getFilteredUsers();
 
   return (
@@ -199,18 +239,21 @@ const Dashboard = () => {
               <p className="text-gray-700">Postcode: {user.postcode}</p>
               <p className="text-gray-700">Geboortedatum: {user.geboortedatum}</p>
               <div className="mt-4">
-                <button className="px-4 py-2 mr-2 text-white bg-green-500 rounded">Like</button>
-                <button className="px-4 py-2 text-white bg-red-500 rounded">Dislike</button>
-                <button onClick={() => toggleUserInfo(user.id)} className="px-4 py-2 text-white bg-blue-500 rounded">
-                  {expandedUserId === user.id ? 'Hide Info' : 'View Info'}
-                </button>
-                <button onClick={() => {
-                  setReportedUserId(user.id);
-                  setComplaintPopupVisible(true);
-                }} className="px-4 py-2 text-white bg-yellow-500 rounded">
-                  Report
-                </button>
-              </div>
+  {likedUsers.includes(user.id) ? (
+    <button onClick={() => handleDislike(user.id)} className="px-4 py-2 mr-2 text-white bg-red-500 rounded">Dislike</button>
+  ) : (
+    <button onClick={() => handleLike(user.id)} className="px-4 py-2 mr-2 text-white bg-green-500 rounded">Like</button>
+  )}
+  <button onClick={() => toggleUserInfo(user.id)} className="px-4 py-2 text-white bg-blue-500 rounded">
+    {expandedUserId === user.id ? 'Hide Info' : 'View Info'}
+  </button>
+  <button onClick={() => {
+    setReportedUserId(user.id);
+    setComplaintPopupVisible(true);
+  }} className="px-4 py-2 text-white bg-yellow-500 rounded">
+    Report
+  </button>
+</div>
               {expandedUserId === user.id && user.expandedInfo && (
                 <div className="p-4 mt-4 border-t border-gray-300">
                   <p>Zoekt: {user.expandedInfo.zoekt}</p>
