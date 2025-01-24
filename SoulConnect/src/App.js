@@ -1,14 +1,13 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'; // Add useNavigate here
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import logo from './img/logo.png';
 import cover from './img/cover.png';
 import './styles/App.css';
 import Landing from './Pages/landing';
 import Dashboard from './Pages/dashboard';
-import { AuthProvider } from './authcontext';
+import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 
-// Header component
 function Header() {
   const navigate = useNavigate();
 
@@ -48,6 +47,11 @@ function Footer() {
   );
 }
 
+function PrivateRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/dashboard" />;
+}
+
 // Main App component
 const App = () => {
   return (
@@ -55,10 +59,9 @@ const App = () => {
       <Header />
       <main className="flex-1 bg-zinc-900 ">
         <Routes>
-          {/* Default Route to Landing Page */}
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
         </Routes>
       </main>
