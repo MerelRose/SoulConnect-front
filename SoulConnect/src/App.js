@@ -7,6 +7,9 @@ import Landing from './Pages/landing';
 import Dashboard from './Pages/dashboard';
 import { AuthProvider } from './authcontext';
 import Home from './Pages/components/login';
+import Voorwaarden from './Pages/components/voorwaarden';
+import Profile from './Pages/components/profiel';
+import Add from './Pages/components/add';
 
 // Header component
 function Header() {
@@ -25,7 +28,7 @@ function Header() {
       <div className="absolute p-4 bg-black rounded-full shadow-lg top-4 right-4">
         <img
           src={logo}
-          className="w-16 h-16 rounded-full"
+          className="w-16 h-16 rounded-full cursor-pointer"
           alt="logo"
           onClick={() => navigate('/landing')}
         />
@@ -59,6 +62,9 @@ const App = () => {
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/voorwaarden" element={<Voorwaarden />} />
+          <Route path="/add" element={<Add />} />
           <Route path="/home" element={<Home />} />
         </Routes>
       </main>
