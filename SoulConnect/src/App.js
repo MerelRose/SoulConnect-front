@@ -51,8 +51,7 @@ function Footer() {
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/dashboard" />;
-  return user ? children : <Navigate to="/info-profiel" />;
+  return user ? children : <Navigate to="/landing" />;
 }
 
 // Main App component
@@ -68,7 +67,6 @@ const App = () => {
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
           <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
-          {/* <Route path="/info-profiel" element={<UserProfile />} /> */}
         </Routes>
       </main>
       <Footer />
