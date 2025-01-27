@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Carousel from './components/user-carousel';
 
 const Dashboard = () => {
   const API_KEY = '*anker';
@@ -153,7 +154,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px]">
+    <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] overflow-y-auto">
+      <h1 className="text-white text-8xl font-loveLight">Top5 Matches</h1>
+        <Carousel />
+        <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
       <div className="flex items-center mb-4">
         <input
           type="text"
