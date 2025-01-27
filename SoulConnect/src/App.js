@@ -8,7 +8,7 @@ import Dashboard from './Pages/dashboard';
 import { AuthProvider } from './authcontext';
 import Home from './Pages/components/login';
 import Voorwaarden from './Pages/components/voorwaarden';
-import Profile from './Pages/components/profiel';
+import Profiel from './Pages/components/profiel';
 import Add from './Pages/components/add';
 
 // Header component
@@ -62,7 +62,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profiel" element={<Profiel />} />
           <Route path="/voorwaarden" element={<Voorwaarden />} />
           <Route path="/add" element={<Add />} />
           <Route path="/home" element={<Home />} />
