@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
 import DeleteAccountPage from './Pages/components/delete';
+import NavBar from './Pages/components/navbar';
 
 function Header() {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      <NavBar /> {/* Add the NavBar component here */}
       <main className="flex-1 bg-zinc-900 ">
         <Routes>
           <Route path="/" element={<Navigate to="/landing" replace />} />
