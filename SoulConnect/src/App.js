@@ -8,6 +8,7 @@ import Dashboard from './Pages/dashboard';
 import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
+import DeleteAccountPage from './Pages/components/delete';
 
 function Header() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ const App = () => {
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
           {/* <Route path="/info-profiel" element={<UserProfile />} /> */}
         </Routes>
