@@ -7,6 +7,7 @@ import Landing from './Pages/landing';
 import Dashboard from './Pages/dashboard';
 import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
+import UserProfile from './Pages/info-profiel';
 
 function Header() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ function Footer() {
 function PrivateRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/dashboard" />;
+  return user ? children : <Navigate to="/info-profiel" />;
 }
 
 // Main App component
@@ -62,7 +64,9 @@ const App = () => {
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
+          {/* <Route path="/info-profiel" element={<UserProfile />} /> */}
         </Routes>
       </main>
       <Footer />
