@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../../styles/App.css';
+import { Link } from 'react-router-dom';
 //test
 function Registration({ showModal, setShowModal }) {
     const [formData, setFormData] = useState({
@@ -151,6 +152,8 @@ function Registration({ showModal, setShowModal }) {
                                 onChange={handleChange}
                                 required
                             />
+
+                            <Link to="/voorwaarden" className="text-blue-500 hover:underline"></Link>
 
                             <button
                                 type="submit"

@@ -40,8 +40,8 @@ const UploadAndDisplayImage = () => {
                 console.error("Error message:", error.message);
             }
         }
+        localStorage.setItem("foto", URL.createObjectURL(selectedImage));
     };
-
     const handleImageClick = () => {
         document.getElementById("file").click();
     };
