@@ -10,7 +10,7 @@ export default function Profile() {
   const [fotos, setFotos] = useState([]);
   const API_ENDPOINT_INFO = `http://localhost:4200/info/${id}`;
   const API_ENDPOINT_user = `http://localhost:4200/users/${id}`;
-  const API_ENDPOINT_foto = `http://localhost:4200/fotos/${id}`;
+  const API_ENDPOINT_foto = `http://localhost:4200/fotos/user/${id}`;
   const API_KEY = '*anker';
 
   useEffect(() => {
@@ -22,7 +22,6 @@ export default function Profile() {
           },
         });
         setProfile(response.data);
-        setFoto(response.data.profielfoto);
       } catch (error) {
         console.error('Error fetching info:', error);
       }
@@ -55,6 +54,9 @@ export default function Profile() {
           },
         });
         setFotos(response.data);
+        if (response.data.length > 0) {
+          setFoto(response.data[0].link); // Use 'link' instead of 'url'
+        }
       } catch (error) {
         console.error('Error fetching foto:', error);
       }
@@ -64,7 +66,7 @@ export default function Profile() {
 
   // Check if the foto value is correct
   useEffect(() => {
-    console.log(profielfoto);
+    console.log('Profile photo URL:', profielfoto);
   }, [profielfoto]);
 
   //get age
@@ -72,7 +74,7 @@ export default function Profile() {
 
   return (
     profile && (
-      <div key={id} className="w-screen flex flex-row h-screen border border-white text-white -mt-1 p-10 bg-gray-800">
+      <div key={id} className="w-screen flex flex-row h-screen-full border border-white text-white -mt-1 p-10 bg-gray-800">
         <div className="w-1/2 p-4">
           <div className="flex items-start mb-4">
             <img src={profielfoto || 'default-profile.png'} alt="profile" className="w-52 h-52 rounded-full bg-black mr-4"/>
@@ -84,19 +86,36 @@ export default function Profile() {
               <div className="text-lg font-bold">voorkeur is {profile.zoekt}</div>
             </div>
           </div>
-          {/* <div className="flex flex-wrap mt-4">
-            {fotos.map((foto, index) => (
-              <img key={index} src={foto.url || 'default-image.png'} alt={`foto-${index}`} className="w-24 h-24 rounded-full m-2"/>
-            ))}
-          </div> */}
+          <div className="w-full mt-6">
+  <div className="text-2xl font-bold mb-4">Gallery</div>
+  <div className="grid grid-cols-3 gap-4">
+    {fotos.map((foto, index) => {
+      // Resolve full URL by prepending the base URL
+      const fullUrl = foto.link.startsWith('http')
+        ? foto.link
+        : `http://localhost:4200/${foto.link.replaceAll('\\', '/')}`;
+        console.log(fullUrl);
+
+      return (
+        <img
+          key={index}
+          src={fullUrl}
+          alt={`Gallery item ${index + 1}`}
+          className="w-full h-40 object-cover rounded-lg shadow-lg"
+        />
+      );
+    })}
+  </div>
+</div>
+
         </div>
-        <div className="w-1/2 p-4 border-4 border-color-white rounded-xl">
+        <div className="w-1/2 h-4/5 p-4 border-4 border-color-white rounded-xl">
           <div className="text-xl font-bold mt-2">hobbies</div>
           <div className="text-lg mt-1">{profile.intresse}</div>
-          <div className="text-lg mt-4 font-bold">zoekt voor een {profile.soort}</div>
+          <div className="text-lg mt-4">zoekt voor een {profile.soort}</div>
           <div className="text-xl font-bold mt-2">huisdieren</div>
           <div className="text-lg mt-1">{profile.huisdier}</div>
-          <div className="text-lg mt-4 font-bold">spreekt {profile.talen}</div>
+          <div className="text-lg mt-4">spreekt {profile.talen}</div>
           <div className="text-xl font-bold mt-4">beroep</div>
           <div className="text-lg mt-1">{profile.beroep}</div>
           <div className="text-xl font-bold mt-4">doet aan</div>
