@@ -19,7 +19,7 @@ function Home({ showModal, setShowModal }) {
 
     const API_KEY = '*anker';
     const API_ENDPOINT = 'http://localhost:4200/login';
-    const RESEND_ENDPOINT = 'http://localhost:4200/resend-verification';
+    const RESEND_ENDPOINT = 'http://localhost:4200/resend';
     const RESET_ENDPOINT = 'http://localhost:4200/request-reset';
 
     const handleLogin = async () => {
@@ -92,7 +92,7 @@ function Home({ showModal, setShowModal }) {
                                 type="text"
                                 id="emailOrUsername"
                                 name="emailOrUsername"
-                                placeholder="School e-mail"
+                                placeholder="e-mail"
                                 className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={emailOrUsername}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -119,8 +119,8 @@ function Home({ showModal, setShowModal }) {
                             </button>
                         </form>
 
-                        {errorMessage && <div className="mt-4 text-red-500">{errorMessage}</div>}
-                        {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
+                        {errorMessage && <div className="p-2 mt-4 text-white bg-red-500 bg-opacity-50 border-4 border-red-700 rounded-lg">{errorMessage}</div>}
+                        {successMessage && <div className="p-2 mt-4 text-white bg-green-500 bg-opacity-50 border-4 border-green-700 rounded-lg">{successMessage}</div>}
 
                         {!isVerified && (
                             <div className="mt-4">
