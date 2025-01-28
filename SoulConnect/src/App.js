@@ -8,7 +8,11 @@ import Dashboard from './Pages/dashboard';
 import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
-import Chat from './Pages/chat';
+import DeleteAccountPage from './Pages/components/delete';
+import NavBar from './Pages/components/navbar';
+import ResetPassword from './Pages/resetpassword';
+import LikesAndMatches from './Pages/likes-matches';
+
 
 function Header() {
   const navigate = useNavigate();
@@ -52,8 +56,7 @@ function Footer() {
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/dashboard" />;
-  return user ? children : <Navigate to="/info-profiel" />;
+  return user ? children : <Navigate to="/landing" />;
 }
 
 // Main App component
@@ -61,14 +64,21 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      <NavBar /> {/* Add the NavBar component here */}
       <main className="flex-1 bg-zinc-900 ">
         <Routes>
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
+          <Route path="/likes&matches" element={<PrivateRoute><LikesAndMatches /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
-          <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} /> {/* Add this line */}
+
+  
+
+          <Route path="/resetpassword" element={<ResetPassword />}/>
+
         </Routes>
       </main>
       <Footer />

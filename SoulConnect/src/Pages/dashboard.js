@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Carousel from './components/user-carousel';
 
 const Dashboard = () => {
   const API_KEY = '*anker';
@@ -27,7 +28,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:4200/users', {
+        const response = await axios.post('http://localhost:4200/filter-users', filters, {
           headers: {
             'api-key': API_KEY,
           },
@@ -39,25 +40,11 @@ const Dashboard = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [filters]);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters({ ...filters, [name]: value });
-  };
-
-  const getFilteredUsers = () => {
-    return users.filter((user) => {
-      return (
-        (filters.zoekt ? user.zoekt === filters.zoekt : true) &&
-        (filters.gender ? user.gender === filters.gender : true) &&
-        (filters.soort ? user.soort === filters.soort : true) &&
-        (filters.huisdier ? user.huisdier === filters.huisdier : true) &&
-        (filters.muziek ? user.muziek === filters.muziek : true) &&
-        (filters.kinderen ? user.kinderen === filters.kinderen : true) &&
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
   };
 
   const clearFilters = () => {
@@ -166,18 +153,19 @@ const Dashboard = () => {
     }
   };
 
-  const filteredUsers = getFilteredUsers();
-
   return (
-    <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px]">
+    <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] overflow-y-auto">
+      <h1 className="text-white text-8xl font-loveLight">Top5 Voorgestelde Matches</h1>
+        <Carousel />
+        <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
       <div className="flex items-center mb-4">
-        <input
+        {/* <input
           type="text"
           placeholder="Search by username"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-1/3 p-2 mr-2 border rounded"
-        />
+        /> */}
         <select name="zoekt" value={filters.zoekt} onChange={handleFilterChange} className="p-2 mr-2 border rounded">
           <option value="">Zoekt</option>
           <option value="vrouw">Vrouw</option>
@@ -232,28 +220,28 @@ const Dashboard = () => {
       </div>
       <div className="max-h-[520px] overflow-y-auto">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredUsers.map((user) => (
+          {users.map((user) => (
             <div key={user.id} className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-md hover:shadow-lg">
               <h2 className="text-xl font-semibold">{user.username}</h2>
               <p className="text-gray-700">Email: {user.email}</p>
               <p className="text-gray-700">Postcode: {user.postcode}</p>
               <p className="text-gray-700">Geboortedatum: {user.geboortedatum}</p>
               <div className="mt-4">
-  {likedUsers.includes(user.id) ? (
-    <button onClick={() => handleDislike(user.id)} className="px-4 py-2 mr-2 text-white bg-red-500 rounded">Dislike</button>
-  ) : (
-    <button onClick={() => handleLike(user.id)} className="px-4 py-2 mr-2 text-white bg-green-500 rounded">Like</button>
-  )}
-  <button onClick={() => toggleUserInfo(user.id)} className="px-4 py-2 text-white bg-blue-500 rounded">
-    {expandedUserId === user.id ? 'Hide Info' : 'View Info'}
-  </button>
-  <button onClick={() => {
-    setReportedUserId(user.id);
-    setComplaintPopupVisible(true);
-  }} className="px-4 py-2 text-white bg-yellow-500 rounded">
-    Report
-  </button>
-</div>
+                {likedUsers.includes(user.id) ? (
+                <button onClick={() => handleDislike(user.id)} className="px-4 py-2 mr-2 text-white bg-red-500 rounded">Dislike</button>
+                ) : (
+                  <button onClick={() => handleLike(user.id)} className="px-4 py-2 mr-2 text-white bg-green-500 rounded">Like</button>
+                )}
+                <button onClick={() => toggleUserInfo(user.id)} className="px-4 py-2 text-white bg-blue-500 rounded">
+                  {expandedUserId === user.id ? 'Hide Info' : 'View Info'}
+                </button>
+                <button onClick={() => {
+                  setReportedUserId(user.id);
+                  setComplaintPopupVisible(true);
+                }} className="px-4 py-2 text-white bg-yellow-500 rounded">
+                  Report
+                </button>
+              </div>
               {expandedUserId === user.id && user.expandedInfo && (
                 <div className="p-4 mt-4 border-t border-gray-300">
                   <p>Zoekt: {user.expandedInfo.zoekt}</p>

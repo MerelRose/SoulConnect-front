@@ -11,12 +11,16 @@ function Home({ showModal, setShowModal }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isVerified, setIsVerified] = useState(true); 
-    const [resendMessage, setResendMessage] = useState(''); 
+    const [resendMessage, setResendMessage] = useState('');
+    const [showResetPopup, setShowResetPopup] = useState(false); // For the reset password popup
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetMessage, setResetMessage] = useState('');
     const navigate = useNavigate();
 
     const API_KEY = '*anker';
     const API_ENDPOINT = 'http://localhost:4200/login';
     const RESEND_ENDPOINT = 'http://localhost:4200/resend-verification';
+    const RESET_ENDPOINT = 'http://localhost:4200/request-reset';
 
     const handleLogin = async () => {
         try {
@@ -25,29 +29,17 @@ function Home({ showModal, setShowModal }) {
                 { emailOrUsername, password },
                 { headers: { 'x-api-key': API_KEY } }
             );
-    
-            console.log('Login Response:', response.data);
-    
             const { token, role, user_id, name, verified } = response.data;
-    
-            console.log(`User  Info: 
-                Email: ${emailOrUsername}, 
-                Token: ${token}, 
-                Role: ${role}, 
-                User ID: ${user_id}, 
-                Name: ${name}, 
-                Verified: ${verified}`);
-    
+
             if (verified === 0) {
                 setIsVerified(false);
                 setErrorMessage('Your email is not verified. Please verify your email.');
                 return;
             }
-    
-            // Store token and user ID in local storage
+
             localStorage.setItem('token', token);
-            localStorage.setItem('userId', user_id); // Store user ID
-    
+            localStorage.setItem('userId', user_id);
+
             const userData = { token, role, user_id, name };
             setSuccessMessage(`Welcome, ${name}`);
             setErrorMessage('');
@@ -56,7 +48,6 @@ function Home({ showModal, setShowModal }) {
         } catch (error) {
             setErrorMessage(error.response?.data?.message || error.message || 'Login failed');
             setSuccessMessage('');
-            console.error(error);
         }
     };
 
@@ -67,18 +58,25 @@ function Home({ showModal, setShowModal }) {
                 { emailOrUsername },
                 { headers: { 'x-api-key': API_KEY } }
             );
-
             setResendMessage(response.data.message || 'Verification email sent successfully.');
         } catch (error) {
             setResendMessage(error.response?.data?.message || 'Failed to resend verification email.');
-            console.error(error);
+        }
+    };
+
+    const handleResetPasswordRequest = async () => {
+        try {
+            const response = await axios.post(RESET_ENDPOINT, { email: resetEmail });
+            setResetMessage(response.data.message || 'If this email is registered, a reset link will be sent.');
+        } catch (error) {
+            setResetMessage(error.response?.data?.message || 'Failed to send reset request.');
         }
     };
 
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center ml-0 bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Login</h2>
                         <form
@@ -124,7 +122,6 @@ function Home({ showModal, setShowModal }) {
                         {errorMessage && <div className="mt-4 text-red-500">{errorMessage}</div>}
                         {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
 
-                        {/* Show resend email button if the user is not verified */}
                         {!isVerified && (
                             <div className="mt-4">
                                 <button
@@ -138,8 +135,55 @@ function Home({ showModal, setShowModal }) {
                         )}
 
                         <button
-                            className="w-full py-2 mt-4 bg-gray-300 rounded-lg hover:bg-gray-400"
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
                             onClick={() => setShowModal(false)}
+                        >
+                            Close
+                        </button>
+
+                        {/* Forgot Password */}
+                        <div className="mt-4 text-center">
+                            <button
+                                className="text-sm text-blue-500 hover:underline"
+                                onClick={() => setShowResetPopup(true)}
+                            >
+                                Forgot Password?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showResetPopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
+                        <h2 className="mb-4 text-2xl font-semibold">Reset Password</h2>
+                        <div className="mb-4">
+                            <label htmlFor="resetEmail" className="block mb-2">
+                                Enter your email to reset your password:
+                            </label>
+                            <input
+                                type="email"
+                                id="resetEmail"
+                                value={resetEmail}
+                                onChange={(e) => setResetEmail(e.target.value)}
+                                placeholder="Email address"
+                                className="w-full p-2 border rounded bg-neutral-700"
+                            />
+                        </div>
+
+                        <button
+                            className="w-full py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                            onClick={handleResetPasswordRequest}
+                        >
+                            Send Reset Link
+                        </button>
+
+                        {resetMessage && <div className="text-green-500">{resetMessage}</div>}
+
+                        <button
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
+                            onClick={() => setShowResetPopup(false)}
                         >
                             Close
                         </button>

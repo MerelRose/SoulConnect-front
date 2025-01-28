@@ -18,8 +18,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const deleteAccount = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

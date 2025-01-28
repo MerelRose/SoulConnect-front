@@ -30,7 +30,11 @@ const UserProfile = () => {
         });
         setUserInfo(response.data);
       } catch (error) {
-        console.error('Error fetching user info:', error);
+        if (error.response && error.response.status === 404) {
+          console.log('No existing user info found, ready to create new info.');
+        } else {
+          console.error('Error fetching user info:', error);
+        }
       }
     };
 
@@ -62,45 +66,69 @@ const UserProfile = () => {
     formData.append('kinderen', userInfo.kinderen);
     if (selectedFile) {
       formData.append('profielfoto', selectedFile);
+    } else {
+      formData.append('profielfoto', 'default.jpg'); // Standaardwaarde voor profielfoto
     }
-
+  
     // Voeg hier een console log toe
     console.log('Form Data:', Object.fromEntries(formData.entries()));
-
+  
     try {
-      await axios.put(`http://localhost:4200/info/${userId}`, formData, {
+      const response = await axios.get(`http://localhost:4200/info/${userId}`, {
         headers: {
           'api-key': API_KEY,
-          'Content-Type': 'multipart/form-data',
         },
       });
-      alert('User info updated successfully!');
+  
+      if (response.data) {
+        // Update existing info
+        await axios.put(`http://localhost:4200/info/${userId}`, formData, {
+          headers: {
+            'api-key': API_KEY,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        alert('User info updated successfully!');
+      }
     } catch (error) {
-      console.error('Error updating user info:', error);
+      if (error.response && error.response.status === 404) {
+        // Create new info
+        formData.append('user_id', userId);
+        await axios.post('http://localhost:4200/info', formData, {
+          headers: {
+            'api-key': API_KEY,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        alert('User info created successfully!');
+      } else {
+        console.error('Error updating or creating user info:', error);
+      }
     }
   };
 
   return (
-    <div className="p-6">
-      <h2 className="mb-4 text-xl font-semibold">Update User Info</h2>
+    <div className="p-6 font-lora flex-1 overflow-y-auto w-screen h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] text-white">
+      <h1 className="mb-4 text-5xl ">Update User Info</h1>
+      <h2 className="mb-4 text-xl ">Alle informatie is verplicht.</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block mb-2 text-white">One Liner</label>
+          <label className="block mb-2 ">One Liner</label>
           <input
             type="text"
             name="one_liner"
             value={userInfo.one_liner}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Zoekt</label>
+          <label className="block mb-2 ">Zoekt</label>
           <select
             name="zoekt"
             value={userInfo.zoekt}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           >
             <option value="">Select</option>
             <option value="vrouw">Vrouw</option>
@@ -109,12 +137,12 @@ const UserProfile = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Gender</label>
+          <label className="block mb-2 ">Gender</label>
           <select
             name="gender"
             value={userInfo.gender}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           >
             <option value="">Select</option>
             <option value="vrouw">Vrouw</option>
@@ -123,8 +151,8 @@ const UserProfile = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Soort Relatie</label>
-          <select name="soort" value={userInfo.soort} onChange={handleInputChange} className="w-full p-2 border rounded">
+          <label className="block mb-2 ">Soort Relatie</label>
+          <select name="soort" value={userInfo.soort} onChange={handleInputChange} className="w-full p-2 mb-4 border rounded-lg bg-neutral-800">
             <option value="">Select</option>
             <option value="vriendschappelijk">Vriendschappelijk</option>
             <option value="relatie">Relatie</option>
@@ -135,46 +163,46 @@ const UserProfile = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Huisdier</label>
-          <select name="huisdier" value={userInfo.huisdier} onChange={handleInputChange} className="w-full p-2 border rounded">
+          <label className="block mb-2 ">Huisdier</label>
+          <select name="huisdier" value={userInfo.huisdier} onChange={handleInputChange} className="w-full p-2 mb-4 border rounded-lg bg-neutral-800">
             <option value="">Select</option>
             <option value="ja">Ja</option>
             <option value="nee">Nee</option>
           </select>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Talen</label>
+          <label className="block mb-2 ">Talen</label>
           <input
             type="text"
             name="talen"
             value={userInfo.talen}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Beroep</label>
+          <label className="block mb-2 ">Beroep</label>
           <input
             type="text"
             name="beroep"
             value={userInfo.beroep}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Sport</label>
+          <label className="block mb-2 ">Sport</label>
           <input
             type="text"
             name="sport"
             value={userInfo.sport}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Muziek</label>
-          <select name="muziek" value={userInfo.muziek} onChange={handleInputChange} className="w-full p-2 border rounded">
+          <label className="block mb-2 ">Muziek</label>
+          <select name="muziek" value={userInfo.muziek} onChange={handleInputChange} className="w-full p-2 mb-4 border rounded-lg bg-neutral-800">
             <option value="">Select</option>
             <option value="pop">Pop</option>
             <option value="rock">Rock</option>
@@ -192,29 +220,29 @@ const UserProfile = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Kinderen</label>
-          <select name="kinderen" value={userInfo.kinderen} onChange={handleInputChange} className="w-full p-2 border rounded">
+          <label className="block mb-2 ">Kinderen</label>
+          <select name="kinderen" value={userInfo.kinderen} onChange={handleInputChange} className="w-full p-2 mb-4 border rounded-lg bg-neutral-800">
             <option value="">Select</option>
             <option value="ja">Ja</option>
             <option value="nee">Nee</option>
             <option value="wens">Wens</option>
           </select>
-        </div>
+          </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Intresse</label>
+          <label className="block mb-2 ">Intresse</label>
           <input
             type="text"
             name="intresse"
             value={userInfo.intresse}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-white">Profielfoto</label>
-          <input type="file" onChange={handleFileChange} className="w-full p-2 border rounded" />
+          <label className="block mb-2 ">Profielfoto</label>
+          <input type="file" onChange={handleFileChange} className="w-full p-2 mb-4 border rounded-lg bg-neutral-800" />
         </div>
-        <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded">
+        <button type="submit" className="px-4 py-2 bg-red-500 rounded">
           Update Info
         </button>
       </form>
