@@ -80,8 +80,8 @@ function Registration({ showModal, setShowModal }) {
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Register</h2>
                         <form onSubmit={handleSubmit}>
-                            {errorMessage && <div className="mt-4 text-red-500">{errorMessage}</div>}
-                            {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
+                            {errorMessage && <div className="p-2 mt-4 text-white bg-red-500 bg-opacity-50 border-4 border-red-700 rounded-lg">{errorMessage}</div>}
+                            {successMessage && <div className="p-2 mt-4 text-white bg-green-500 bg-opacity-50 border-4 border-green-700 rounded-lg">{successMessage}</div>}
                             
                             <label htmlFor="username" className="block mb-2 text-lg font-Rubik">
                                 Username:
