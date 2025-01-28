@@ -10,6 +10,7 @@ import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
 import DeleteAccountPage from './Pages/components/delete';
 import NavBar from './Pages/components/navbar';
+import ResetPassword from './Pages/resetpassword';
 
 function Header() {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ const App = () => {
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
           <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
+          <Route path="/resetpassword" element={<ResetPassword />}/>
         </Routes>
       </main>
       <Footer />
