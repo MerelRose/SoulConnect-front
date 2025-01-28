@@ -1,17 +1,18 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'; // Add useNavigate here
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import logo from './img/logo.png';
 import cover from './img/cover.png';
 import './styles/App.css';
 import Landing from './Pages/landing';
 import Dashboard from './Pages/dashboard';
-import { AuthProvider } from './authcontext';
+import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
-import Voorwaarden from './Pages/components/voorwaarden';
-import Profiel from './Pages/components/profiel';
-import Add from './Pages/components/add';
+import UserProfile from './Pages/info-profiel';
+import DeleteAccountPage from './Pages/components/delete';
+import NavBar from './Pages/components/navbar';
+import ResetPassword from './Pages/resetpassword';
+import LikesAndMatches from './Pages/likes-matches';
 
-// Header component
 function Header() {
   const navigate = useNavigate();
 
@@ -51,21 +52,27 @@ function Footer() {
   );
 }
 
+function PrivateRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/landing" />;
+}
+
 // Main App component
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      <NavBar /> {/* Add the NavBar component here */}
       <main className="flex-1 bg-zinc-900 ">
         <Routes>
-          {/* Default Route to Landing Page */}
           <Route path="/" element={<Navigate to="/landing" replace />} />
           <Route path="/landing" element={<Landing />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profiel" element={<Profiel />} />
-          <Route path="/voorwaarden" element={<Voorwaarden />} />
-          <Route path="/add" element={<Add />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
+          <Route path="/likes&matches" element={<PrivateRoute><LikesAndMatches /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
+          <Route path="/resetpassword" element={<ResetPassword />}/>
         </Routes>
       </main>
       <Footer />

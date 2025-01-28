@@ -3,48 +3,80 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/App.css';
 import { useAuth } from '../../authcontext';
-//test
+
 function Home({ showModal, setShowModal }) {
     const { login } = useAuth();
-    const [email, setEmail] = useState('');
+    const [emailOrUsername, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [isVerified, setIsVerified] = useState(true); 
+    const [resendMessage, setResendMessage] = useState('');
+    const [showResetPopup, setShowResetPopup] = useState(false); // For the reset password popup
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetMessage, setResetMessage] = useState('');
     const navigate = useNavigate();
 
-    // Access the API key from the environment variable
     const API_KEY = '*anker';
     const API_ENDPOINT = 'http://localhost:4200/login';
+    const RESEND_ENDPOINT = 'http://localhost:4200/resend-verification';
+    const RESET_ENDPOINT = 'http://localhost:4200/request-reset';
 
     const handleLogin = async () => {
         try {
             const response = await axios.post(
                 API_ENDPOINT,
-                { email, password },
+                { emailOrUsername, password },
                 { headers: { 'x-api-key': API_KEY } }
             );
+            const { token, role, user_id, name, verified } = response.data;
 
-            const { token, role, user_id, name } = response.data;
+            if (verified === 0) {
+                setIsVerified(false);
+                setErrorMessage('Your email is not verified. Please verify your email.');
+                return;
+            }
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('userId', user_id);
+
             const userData = { token, role, user_id, name };
-
-            console.log('Logged-in user info:', userData);
-
             setSuccessMessage(`Welcome, ${name}`);
             setErrorMessage('');
-
-            login(userData);
+            login(userData); 
             navigate('/dashboard');
         } catch (error) {
             setErrorMessage(error.response?.data?.message || error.message || 'Login failed');
             setSuccessMessage('');
-            console.error(error);
+        }
+    };
+
+    const handleResendVerification = async () => {
+        try {
+            const response = await axios.post(
+                RESEND_ENDPOINT,
+                { emailOrUsername },
+                { headers: { 'x-api-key': API_KEY } }
+            );
+            setResendMessage(response.data.message || 'Verification email sent successfully.');
+        } catch (error) {
+            setResendMessage(error.response?.data?.message || 'Failed to resend verification email.');
+        }
+    };
+
+    const handleResetPasswordRequest = async () => {
+        try {
+            const response = await axios.post(RESET_ENDPOINT, { email: resetEmail });
+            setResetMessage(response.data.message || 'If this email is registered, a reset link will be sent.');
+        } catch (error) {
+            setResetMessage(error.response?.data?.message || 'Failed to send reset request.');
         }
     };
 
     return (
         <>
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center ml-0 bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Login</h2>
                         <form
@@ -53,27 +85,27 @@ function Home({ showModal, setShowModal }) {
                                 handleLogin();
                             }}
                         >
-                            <label htmlFor="email" className="block mb-2 text-lg font-Rubik">
+                            <label htmlFor="emailOrUsername" className="block mb-2 text-lg font-Rubik">
                                 E-mail:
                             </label>
                             <input
                                 type="text"
-                                id="email"
-                                name="email"
+                                id="emailOrUsername"
+                                name="emailOrUsername"
                                 placeholder="School e-mail"
                                 className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
-                                value={email}
+                                value={emailOrUsername}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
 
                             <label htmlFor="password" className="block mb-2 text-lg font-Rubik">
-                                Wachtwoord:
+                                Password:
                             </label>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                placeholder="Wachtwoord"
+                                placeholder="Password"
                                 className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -90,10 +122,68 @@ function Home({ showModal, setShowModal }) {
                         {errorMessage && <div className="mt-4 text-red-500">{errorMessage}</div>}
                         {successMessage && <div className="mt-4 text-green-500">{successMessage}</div>}
 
-                        {/* Close Button */}
+                        {!isVerified && (
+                            <div className="mt-4">
+                                <button
+                                    className="w-full py-2 mb-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                                    onClick={handleResendVerification}
+                                >
+                                    Resend Verification Email
+                                </button>
+                                {resendMessage && <div className="mt-2 text-green-500">{resendMessage}</div>}
+                            </div>
+                        )}
+
                         <button
-                            className="w-full py-2 mt-4 bg-gray-300 rounded-lg hover:bg-gray-400"
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
                             onClick={() => setShowModal(false)}
+                        >
+                            Close
+                        </button>
+
+                        {/* Forgot Password */}
+                        <div className="mt-4 text-center">
+                            <button
+                                className="text-sm text-blue-500 hover:underline"
+                                onClick={() => setShowResetPopup(true)}
+                            >
+                                Forgot Password?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showResetPopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
+                        <h2 className="mb-4 text-2xl font-semibold">Reset Password</h2>
+                        <div className="mb-4">
+                            <label htmlFor="resetEmail" className="block mb-2">
+                                Enter your email to reset your password:
+                            </label>
+                            <input
+                                type="email"
+                                id="resetEmail"
+                                value={resetEmail}
+                                onChange={(e) => setResetEmail(e.target.value)}
+                                placeholder="Email address"
+                                className="w-full p-2 border rounded bg-neutral-700"
+                            />
+                        </div>
+
+                        <button
+                            className="w-full py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                            onClick={handleResetPasswordRequest}
+                        >
+                            Send Reset Link
+                        </button>
+
+                        {resetMessage && <div className="text-green-500">{resetMessage}</div>}
+
+                        <button
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
+                            onClick={() => setShowResetPopup(false)}
                         >
                             Close
                         </button>
