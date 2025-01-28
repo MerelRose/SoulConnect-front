@@ -10,17 +10,12 @@ function Home({ showModal, setShowModal }) {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [isVerified, setIsVerified] = useState(true); 
-    const [resendMessage, setResendMessage] = useState('');
-    const [showResetPopup, setShowResetPopup] = useState(false); // For the reset password popup
-    const [resetEmail, setResetEmail] = useState('');
-    const [resetMessage, setResetMessage] = useState('');
+    const [isVerified, setIsVerified] = useState(true);
+    const [showResendPopup, setShowResendPopup] = useState(false); // Control for resend verification popup
     const navigate = useNavigate();
 
     const API_KEY = '*anker';
     const API_ENDPOINT = 'http://localhost:4200/login';
-    const RESEND_ENDPOINT = 'http://localhost:4200/resend-verification';
-    const RESET_ENDPOINT = 'http://localhost:4200/request-reset';
 
     const handleLogin = async () => {
         try {
@@ -43,33 +38,11 @@ function Home({ showModal, setShowModal }) {
             const userData = { token, role, user_id, name };
             setSuccessMessage(`Welcome, ${name}`);
             setErrorMessage('');
-            login(userData); 
+            login(userData);
             navigate('/dashboard');
         } catch (error) {
             setErrorMessage(error.response?.data?.message || error.message || 'Login failed');
             setSuccessMessage('');
-        }
-    };
-
-    const handleResendVerification = async () => {
-        try {
-            const response = await axios.post(
-                RESEND_ENDPOINT,
-                { emailOrUsername },
-                { headers: { 'x-api-key': API_KEY } }
-            );
-            setResendMessage(response.data.message || 'Verification email sent successfully.');
-        } catch (error) {
-            setResendMessage(error.response?.data?.message || 'Failed to resend verification email.');
-        }
-    };
-
-    const handleResetPasswordRequest = async () => {
-        try {
-            const response = await axios.post(RESET_ENDPOINT, { email: resetEmail });
-            setResetMessage(response.data.message || 'If this email is registered, a reset link will be sent.');
-        } catch (error) {
-            setResetMessage(error.response?.data?.message || 'Failed to send reset request.');
         }
     };
 
@@ -126,11 +99,10 @@ function Home({ showModal, setShowModal }) {
                             <div className="mt-4">
                                 <button
                                     className="w-full py-2 mb-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                                    onClick={handleResendVerification}
+                                    onClick={() => setShowResendPopup(true)} // Show the resend popup
                                 >
                                     Resend Verification Email
                                 </button>
-                                {resendMessage && <div className="mt-2 text-green-500">{resendMessage}</div>}
                             </div>
                         )}
 
@@ -145,7 +117,7 @@ function Home({ showModal, setShowModal }) {
                         <div className="mt-4 text-center">
                             <button
                                 className="text-sm text-blue-500 hover:underline"
-                                onClick={() => setShowResetPopup(true)}
+                                onClick={() => console.log('Forgot password functionality')}
                             >
                                 Forgot Password?
                             </button>
@@ -154,19 +126,56 @@ function Home({ showModal, setShowModal }) {
                 </div>
             )}
 
-            {showResetPopup && (
+            {/* Resend Verification Popup */}
+            {showResendPopup && (
+                <ResendVerificationPopup
+                    showResendPopup={showResendPopup}
+                    setShowResendPopup={setShowResendPopup}
+                />
+            )}
+        </>
+    );
+}
+
+function ResendVerificationPopup({ showResendPopup, setShowResendPopup }) {
+    const [email, setEmail] = useState('');
+    const [resendMessage, setResendMessage] = useState('');
+    const RESEND_ENDPOINT = 'http://localhost:4200/resend';
+    const API_KEY = '*anker';
+
+    const handleResendVerification = async () => {
+        if (!email.trim()) {
+            setResendMessage('Please enter your email.');
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                RESEND_ENDPOINT,
+                { email }, // Send the email to backend
+                { headers: { 'x-api-key': API_KEY } }
+            );
+            setResendMessage(response.data.message || 'Verification email sent successfully.');
+        } catch (error) {
+            setResendMessage(error.response?.data?.message || 'Failed to resend verification email.');
+        }
+    };
+
+    return (
+        <>
+            {showResendPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
-                        <h2 className="mb-4 text-2xl font-semibold">Reset Password</h2>
+                        <h2 className="mb-4 text-2xl font-semibold">Resend Verification Email</h2>
                         <div className="mb-4">
-                            <label htmlFor="resetEmail" className="block mb-2">
-                                Enter your email to reset your password:
+                            <label htmlFor="resendEmail" className="block mb-2">
+                                Enter your email to resend verification email:
                             </label>
                             <input
                                 type="email"
-                                id="resetEmail"
-                                value={resetEmail}
-                                onChange={(e) => setResetEmail(e.target.value)}
+                                id="resendEmail"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Email address"
                                 className="w-full p-2 border rounded bg-neutral-700"
                             />
@@ -174,16 +183,16 @@ function Home({ showModal, setShowModal }) {
 
                         <button
                             className="w-full py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                            onClick={handleResetPasswordRequest}
+                            onClick={handleResendVerification}
                         >
-                            Send Reset Link
+                            Resend Email
                         </button>
 
-                        {resetMessage && <div className="text-green-500">{resetMessage}</div>}
+                        {resendMessage && <div className="text-green-500">{resendMessage}</div>}
 
                         <button
                             className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
-                            onClick={() => setShowResetPopup(false)}
+                            onClick={() => setShowResendPopup(false)}
                         >
                             Close
                         </button>
