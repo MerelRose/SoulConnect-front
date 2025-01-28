@@ -80,7 +80,7 @@ export default function Profile() {
             <img src={profielfoto || 'default-profile.png'} alt="profile" className="w-52 h-52 rounded-full bg-black mr-4"/>
             <div>
               <div className="text-4xl">{user.username}</div>
-              <div className="text-lg font-bold">{leeftijd + " jaar oud"}</div>
+              <div className="text-lg font-bold">{leeftijd + " years old"}</div>
               <div className="text-lg font-bold">{profile.one_liner}</div>
               <div className="text-lg font-bold">gender is {profile.gender}</div>
               <div className="text-lg font-bold">is looking for {profile.zoekt}</div>
