@@ -42,9 +42,6 @@ const Carousel = () => {
           <div key={index} className="p-6 text-center text-white bg-gray-800 rounded-lg">
             <h2 className="mb-4 text-2xl text-purple-400">{user.username}</h2>
             <div className="text-left">
-              <p><span className="font-semibold">Email:</span> {user.email}</p>
-              <p><span className="font-semibold">Postcode:</span> {user.postcode}</p>
-              <p><span className="font-semibold">Geboortedatum:</span> {user.geboortedatum}</p>
               <p><span className="font-semibold">Zoekt:</span> {user.zoekt}</p>
               <p><span className="font-semibold">Gender:</span> {user.gender}</p>
               <p><span className="font-semibold">Soort:</span> {user.soort}</p>
