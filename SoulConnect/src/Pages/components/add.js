@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 const UploadAndDisplayImage = () => {
-    const user_id = localStorage.getItem("user_id");
+    const { id } = useParams();
     const [API_KEY] = useState("*anker");
     const [selectedImage, setSelectedImage] = useState(null);
     const [allowedTypes] = useState([
@@ -20,7 +21,7 @@ const UploadAndDisplayImage = () => {
 
         const formData = new FormData();
         formData.append("id", selectedImage ? selectedImage.name : "");
-        formData.append("user_id", user_id);
+        formData.append("user_id", id);
         formData.append("foto", selectedImage);
 
         try {

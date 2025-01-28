@@ -1,131 +1,135 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Profile() {
-
-  const id = localStorage.getItem('user_id');
+  const { id } = useParams(); // get the id from the url
   const [profile, setProfile] = useState({});
   const [user, setUser] = useState({});
   const [profielfoto, setFoto] = useState('');
   const [fotos, setFotos] = useState([]);
+  const [loading, setLoading] = useState(true); // for loading state
+  const [error, setError] = useState(null); // for error state
+
   const API_ENDPOINT_INFO = `http://localhost:4200/info/${id}`;
   const API_ENDPOINT_user = `http://localhost:4200/users/${id}`;
   const API_ENDPOINT_foto = `http://localhost:4200/fotos/user/${id}`;
   const API_KEY = '*anker';
 
   useEffect(() => {
-    const fetchinfo = async () => {
-      try {
-        const response = await axios.get(API_ENDPOINT_INFO, {
-          headers: {
-            'api-key': API_KEY,
-          },
-        });
-        setProfile(response.data);
-      } catch (error) {
-        console.error('Error fetching info:', error);
-      }
-    };
-    fetchinfo();
-  }, []);
+    const fetchData = async () => {
+      setLoading(true); // Start loading
 
-  useEffect(() => {
-    const fetchuser = async () => {
       try {
-        const response = await axios.get(API_ENDPOINT_user, {
-          headers: {
-            'api-key': API_KEY,
-          },
-        });
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    fetchuser();
-  }, []);
+        const [infoResponse, userResponse, fotoResponse] = await Promise.all([
+          axios.get(API_ENDPOINT_INFO, {
+            headers: { 'api-key': API_KEY },
+          }),
+          axios.get(API_ENDPOINT_user, {
+            headers: { 'api-key': API_KEY },
+          }),
+          axios.get(API_ENDPOINT_foto, {
+            headers: { 'api-key': API_KEY },
+          }),
+        ]);
 
-  useEffect(() => {
-    const fetchfoto = async () => {
-      try {
-        const response = await axios.get(API_ENDPOINT_foto, {
-          headers: {
-            'api-key': API_KEY,
-          },
-        });
-        setFotos(response.data);
-        if (response.data.length > 0) {
-          setFoto(response.data[0].link); // Use 'link' instead of 'url'
+        // Set all the responses into the states
+        setProfile(infoResponse.data);
+        setUser(userResponse.data);
+        setFotos(fotoResponse.data);
+
+        // Set the profile photo if available
+        if (fotoResponse.data.length > 0) {
+          setFoto(fotoResponse.data[0].link); // Use 'link' for profile photo
         }
       } catch (error) {
-        console.error('Error fetching foto:', error);
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data.'); // Set error message
+      } finally {
+        setLoading(false); // End loading
       }
     };
-    fetchfoto();
-  }, []);
 
-  // Check if the foto value is correct
-  useEffect(() => {
-    console.log('Profile photo URL:', profielfoto);
-  }, [profielfoto]);
+    fetchData();
+  }, [id]); // Re-fetch if 'id' changes
 
-  //get age
+  if (loading) {
+    return <div>Loading...</div>; // Show loading indicator while fetching data
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Show error message if data fetching failed
+  }
+
+  // Calculate age
   const leeftijd = new Date().getFullYear() - new Date(user.geboortedatum).getFullYear();
 
   return (
-    profile && (
-      <div key={id} className="w-screen flex flex-row h-screen-full border border-white text-white -mt-1 p-10 bg-gray-800">
-        <div className="w-1/2 p-4">
-          <div className="flex items-start mb-4">
-            <img src={profielfoto || 'default-profile.png'} alt="profile" className="w-52 h-52 rounded-full bg-black mr-4"/>
-            <div>
-              <div className="text-4xl">{user.username}</div>
-              <div className="text-lg font-bold">{leeftijd + " years old"}</div>
-              <div className="text-lg font-bold">{profile.one_liner}</div>
-              <div className="text-lg font-bold">gender is {profile.gender}</div>
-              <div className="text-lg font-bold">is looking for {profile.zoekt}</div>
-            </div>
-          </div>
-          <div className="w-full mt-6">
-  <div className="text-2xl font-bold mb-4">Gallery</div>
-  <div className="grid grid-cols-3 gap-4">
-    {fotos.map((foto, index) => {
-      // Resolve full URL by prepending the base URL
-      const fullUrl = foto.link.startsWith('http')
-        ? foto.link
-        : `http://localhost:4200/${foto.link.replaceAll('\\', '/')}`;
-        console.log(fullUrl);
-
-      return (
-        <img
-          key={index}
-          src={fullUrl}
-          alt={`Gallery item ${index + 1}`}
-          className="w-full h-40 object-cover rounded-lg shadow-lg"
-        />
-      );
-    })}
+    <div key={id} className="w-screen flex flex-row h-screen-full border border-white text-white -mt-1 p-10 bg-gray-800">
+      <div className="w-1/2 p-4">
+   <div className="flex flex-col items-center md:items-start text-white space-y-4">
+  <img 
+    src={profielfoto || 'default-profile.png'} 
+    alt="Profile" 
+    className="w-52 h-52 rounded-full bg-black shadow-lg"
+  />
+  <div className="text-center md:text-left">
+    <h1 className="text-4xl font-bold">{user.username}</h1>
+    <p className="text-lg">{leeftijd} years old</p>
+    <p className="text-lg">{profile.one_liner || "No one-liner available"}</p>
+    <p className="text-lg">Gender: {profile.gender || "Not specified"}</p>
+    <p className="text-lg">Looking for: {profile.zoekt || "Not specified"}</p>
   </div>
 </div>
 
-        </div>
-        <div className="w-1/2 h-4/5 p-4 border-4 border-color-white rounded-xl">
-          <div className="text-xl font-bold mt-2">hobbys</div>
-          <div className="text-lg mt-1">{profile.intresse}</div>
-          <div className="text-lg mt-4">is looking for a {profile.soort}</div>
-          <div className="text-xl font-bold mt-2">pets</div>
-          <div className="text-lg mt-1">{profile.huisdier}</div>
-          <div className="text-lg mt-4">speaks {profile.talen}</div>
-          <div className="text-xl font-bold mt-4">job</div>
-          <div className="text-lg mt-1">{profile.beroep}</div>
-          <div className="text-xl font-bold mt-4">plays</div>
-          <div className="text-lg mt-1">{profile.sport}</div>
-          <div className="text-xl font-bold mt-4">listens to</div>
-          <div className="text-lg mt-1">{profile.muziek}</div>
-          <div className="text-xl font-bold mt-4">has children</div>
-          <div className="text-lg mt-2">{profile.kinderen}</div>
+        <div className="w-full mt-6">
+          <div className="text-2xl font-bold mb-4">Gallery</div>
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+  {fotos.map((foto, index) => {
+    const fullUrl = foto.link.startsWith('http') 
+      ? foto.link 
+      : `http://localhost:4200/${foto.link.replaceAll('\\', '/')}`;
+
+    return (
+      <div key={index} className="bg-gray-700 rounded-lg overflow-hidden">
+        <img
+          src={fullUrl}
+          alt={`Gallery item ${index + 1}`}
+          className="w-full h-40 object-cover rounded-lg shadow-lg"
+          onError={(e) => { e.target.src = 'fallback-image.jpg'; }}
+        />
+      </div>
+    );
+  })}
+</div>
+
         </div>
       </div>
-    )
+      <div className="w-1/2 h-full p-6 border-4 border-white rounded-xl bg-gray-900 mt-96 overflow-auto">
+  <h2 className="text-xl font-bold">Hobbies</h2>
+  <p className="text-lg">{profile.intresse}</p>
+  
+  <h2 className="text-xl font-bold mt-4">Looking for a {profile.soort}</h2>
+
+  <h2 className="text-xl font-bold mt-4">Pets</h2>
+  <p className="text-lg">{profile.huisdier}</p>
+
+  <h2 className="text-xl font-bold mt-4">Speaks</h2>
+  <p className="text-lg">{profile.talen}</p>
+
+  <h2 className="text-xl font-bold mt-4">Job</h2>
+  <p className="text-lg">{profile.beroep}</p>
+
+  <h2 className="text-xl font-bold mt-4">Plays</h2>
+  <p className="text-lg">{profile.sport}</p>
+
+  <h2 className="text-xl font-bold mt-4">Listens to</h2>
+  <p className="text-lg">{profile.muziek}</p>
+
+  <h2 className="text-xl font-bold mt-4">Has children</h2>
+  <p className="text-lg">{profile.kinderen}</p>
+</div>
+
+    </div>
   );
 }
