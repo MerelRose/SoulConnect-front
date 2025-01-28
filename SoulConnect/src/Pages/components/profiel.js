@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export default function Profile() {
@@ -6,9 +6,11 @@ export default function Profile() {
   const id = localStorage.getItem('user_id');
   const [profile, setProfile] = useState({});
   const [user, setUser] = useState({});
-  const [profielfoto, setFoto] = useState({});
+  const [profielfoto, setFoto] = useState('');
+  const [fotos, setFotos] = useState([]);
   const API_ENDPOINT_INFO = `http://localhost:4200/info/${id}`;
   const API_ENDPOINT_user = `http://localhost:4200/users/${id}`;
+  const API_ENDPOINT_foto = `http://localhost:4200/fotos/${id}`;
   const API_KEY = '*anker';
 
   useEffect(() => {
@@ -45,7 +47,20 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-  }, [profile]);
+    const fetchfoto = async () => {
+      try {
+        const response = await axios.get(API_ENDPOINT_foto, {
+          headers: {
+            'api-key': API_KEY,
+          },
+        });
+        setFotos(response.data);
+      } catch (error) {
+        console.error('Error fetching foto:', error);
+      }
+    };
+    fetchfoto();
+  }, []);
 
   // Check if the foto value is correct
   useEffect(() => {
@@ -60,7 +75,7 @@ export default function Profile() {
       <div key={id} className="w-screen flex flex-row h-screen border border-white text-white -mt-1 p-10 bg-gray-800">
         <div className="w-1/2 p-4">
           <div className="flex items-start mb-4">
-            <img src={profile.profielfoto} alt="profile" className="w-52 h-52 rounded-full bg-black mr-4"/>
+            <img src={profielfoto || 'default-profile.png'} alt="profile" className="w-52 h-52 rounded-full bg-black mr-4"/>
             <div>
               <div className="text-4xl">{user.username}</div>
               <div className="text-lg font-bold">{leeftijd + " jaar oud"}</div>
@@ -69,22 +84,27 @@ export default function Profile() {
               <div className="text-lg font-bold">voorkeur is {profile.zoekt}</div>
             </div>
           </div>
+          {/* <div className="flex flex-wrap mt-4">
+            {fotos.map((foto, index) => (
+              <img key={index} src={foto.url || 'default-image.png'} alt={`foto-${index}`} className="w-24 h-24 rounded-full m-2"/>
+            ))}
+          </div> */}
         </div>
         <div className="w-1/2 p-4 border-4 border-color-white rounded-xl">
           <div className="text-xl font-bold mt-2">hobbies</div>
-          <div className="text-sm mt-1">{profile.intresse}</div>
+          <div className="text-lg mt-1">{profile.intresse}</div>
           <div className="text-lg mt-4 font-bold">zoekt voor een {profile.soort}</div>
           <div className="text-xl font-bold mt-2">huisdieren</div>
-          <div className="text-sm mt-1">{profile.huisdier}</div>
+          <div className="text-lg mt-1">{profile.huisdier}</div>
           <div className="text-lg mt-4 font-bold">spreekt {profile.talen}</div>
           <div className="text-xl font-bold mt-4">beroep</div>
-          <div className="text-sm mt-1">{profile.beroep}</div>
+          <div className="text-lg mt-1">{profile.beroep}</div>
           <div className="text-xl font-bold mt-4">doet aan</div>
-          <div className="text-sm mt-1">{profile.sport}</div>
+          <div className="text-lg mt-1">{profile.sport}</div>
           <div className="text-xl font-bold mt-4">houd van</div>
-          <div className="text-sm mt-1">{profile.muziek}</div>
+          <div className="text-lg mt-1">{profile.muziek}</div>
           <div className="text-xl font-bold mt-4">kinderen</div>
-          <div className="text-sm mt-2">{profile.kinderen}</div>
+          <div className="text-lg mt-2">{profile.kinderen}</div>
         </div>
       </div>
     )
