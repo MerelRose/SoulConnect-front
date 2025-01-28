@@ -155,7 +155,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] overflow-y-auto">
-      <h1 className="text-white text-8xl font-loveLight">Top5 Matches</h1>
+      <h1 className="text-white text-8xl font-loveLight">Top5 Voorgestelde Matches</h1>
         <Carousel />
         <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
       <div className="flex items-center mb-4">

@@ -10,6 +10,7 @@ import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
 import DeleteAccountPage from './Pages/components/delete';
 import NavBar from './Pages/components/navbar';
+import LikesAndMatches from './Pages/likes-matches';
 
 function Header() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ const App = () => {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
           <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
+          <Route path="/likes&matches" element={<PrivateRoute><LikesAndMatches /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
         </Routes>
       </main>
