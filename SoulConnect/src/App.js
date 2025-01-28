@@ -8,6 +8,7 @@ import Dashboard from './Pages/dashboard';
 import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
+import Chat from './Pages/chat';
 
 function Header() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function Header() {
           alt="logo"
           onClick={() => navigate('/landing')}
         />
+        <button onClick={() => navigate('/chat')} className="ml-4 text-white">Chat</button> {/* Add this line */}
       </div>
 
       {/* Centered Text */}
@@ -66,7 +68,7 @@ const App = () => {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
-          {/* <Route path="/info-profiel" element={<UserProfile />} /> */}
+          <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} /> {/* Add this line */}
         </Routes>
       </main>
       <Footer />
