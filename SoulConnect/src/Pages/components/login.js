@@ -12,14 +12,16 @@ function Home({ showModal, setShowModal }) {
     const [successMessage, setSuccessMessage] = useState('');
     const [isVerified, setIsVerified] = useState(true); 
     const [resendMessage, setResendMessage] = useState('');
-    const [showResetPopup, setShowResetPopup] = useState(false); // For the reset password popup
-    const [resetEmail, setResetEmail] = useState('');
+    const [showResendPopup, setShowResendPopup] = useState(false);  // For the resend verification popup
+    const [resendEmail, setResendEmail] = useState('');  // Email for resend
+    const [showResetPopup, setShowResetPopup] = useState(false);  // For the reset password popup
+    const [resetEmail, setResetEmail] = useState('');  // Email for reset
     const [resetMessage, setResetMessage] = useState('');
     const navigate = useNavigate();
 
     const API_KEY = '*anker';
     const API_ENDPOINT = 'http://localhost:4200/login';
-    const RESEND_ENDPOINT = 'http://localhost:4200/resend';
+    const RESEND_ENDPOINT = 'http://localhost:4200/resend'; 
     const RESET_ENDPOINT = 'http://localhost:4200/request-reset';
 
     const handleLogin = async () => {
@@ -55,10 +57,11 @@ function Home({ showModal, setShowModal }) {
         try {
             const response = await axios.post(
                 RESEND_ENDPOINT,
-                { emailOrUsername },
+                { email: resendEmail },  // Use the email entered in the popup
                 { headers: { 'x-api-key': API_KEY } }
             );
             setResendMessage(response.data.message || 'Verification email sent successfully.');
+            setShowResendPopup(false);  // Close the popup after successful resend
         } catch (error) {
             setResendMessage(error.response?.data?.message || 'Failed to resend verification email.');
         }
@@ -126,7 +129,7 @@ function Home({ showModal, setShowModal }) {
                             <div className="mt-4">
                                 <button
                                     className="w-full py-2 mb-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                                    onClick={handleResendVerification}
+                                    onClick={() => setShowResendPopup(true)}  // Show the resend popup
                                 >
                                     Resend Verification Email
                                 </button>
@@ -145,7 +148,7 @@ function Home({ showModal, setShowModal }) {
                         <div className="mt-4 text-center">
                             <button
                                 className="text-sm text-blue-500 hover:underline"
-                                onClick={() => setShowResetPopup(true)}
+                                onClick={() => setShowResetPopup(true)} // Show the reset password popup
                             >
                                 Forgot Password?
                             </button>
@@ -154,13 +157,59 @@ function Home({ showModal, setShowModal }) {
                 </div>
             )}
 
+            {/* Resend Verification Email Popup */}
+            {showResendPopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
+                        <h2 className="mb-4 text-2xl font-semibold">Resend Verification Email</h2>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleResendVerification();
+                            }}
+                        >
+                            <label htmlFor="resendEmail" className="block mb-2 text-lg font-Rubik">
+                                Enter your email address:
+                            </label>
+                            <input
+                                type="email"
+                                id="resendEmail"
+                                value={resendEmail}
+                                onChange={(e) => setResendEmail(e.target.value)}
+                                placeholder="Email address"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
+                            />
+                            <button
+                                type="submit"
+                                className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                            >
+                                Resend Email
+                            </button>
+                        </form>
+                        {resendMessage && <div className="mt-2 text-green-500">{resendMessage}</div>}
+                        <button
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
+                            onClick={() => setShowResendPopup(false)}  // Close the popup
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Reset Password Popup */}
             {showResetPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
                         <h2 className="mb-4 text-2xl font-semibold">Reset Password</h2>
-                        <div className="mb-4">
-                            <label htmlFor="resetEmail" className="block mb-2">
-                                Enter your email to reset your password:
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleResetPasswordRequest();
+                            }}
+                        >
+                            <label htmlFor="resetEmail" className="block mb-2 text-lg font-Rubik">
+                                Enter your email address:
                             </label>
                             <input
                                 type="email"
@@ -168,22 +217,19 @@ function Home({ showModal, setShowModal }) {
                                 value={resetEmail}
                                 onChange={(e) => setResetEmail(e.target.value)}
                                 placeholder="Email address"
-                                className="w-full p-2 border rounded bg-neutral-700"
+                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
                             />
-                        </div>
-
-                        <button
-                            className="w-full py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                            onClick={handleResetPasswordRequest}
-                        >
-                            Send Reset Link
-                        </button>
-
-                        {resetMessage && <div className="text-green-500">{resetMessage}</div>}
-
+                            <button
+                                type="submit"
+                                className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                            >
+                                Request Reset
+                            </button>
+                        </form>
+                        {resetMessage && <div className="mt-2 text-green-500">{resetMessage}</div>}
                         <button
                             className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
-                            onClick={() => setShowResetPopup(false)}
+                            onClick={() => setShowResetPopup(false)}  // Close the popup
                         >
                             Close
                         </button>
