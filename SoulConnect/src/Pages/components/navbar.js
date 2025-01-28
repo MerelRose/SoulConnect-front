@@ -20,9 +20,6 @@ function NavBar() {
     <nav className="p-4 bg-gray-800">
       <ul className="flex space-x-4">
         <li>
-          <Link to="/landing" className="text-white">Landing</Link>
-        </li>
-        <li>
           <Link to="/dashboard" className="text-white">Dashboard</Link>
         </li>
         <li>
@@ -30,6 +27,9 @@ function NavBar() {
         </li>
         <li>
           <Link to="/delete" className="text-white">Account Verwijderen</Link>
+        </li>
+        <li>
+          <Link to="/likes&matches" className="text-white">Likes & Matches</Link>
         </li>
         <li>
           <button onClick={handleLogout} className="text-white">Logout</button>

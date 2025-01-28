@@ -155,17 +155,17 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] overflow-y-auto">
-      <h1 className="text-white text-8xl font-loveLight">Top5 Matches</h1>
+      <h1 className="text-white text-8xl font-loveLight">Top5 Voorgestelde Matches</h1>
         <Carousel />
         <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
       <div className="flex items-center mb-4">
-        <input
+        {/* <input
           type="text"
           placeholder="Search by username"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-1/3 p-2 mr-2 border rounded"
-        />
+        /> */}
         <select name="zoekt" value={filters.zoekt} onChange={handleFilterChange} className="p-2 mr-2 border rounded">
           <option value="">Zoekt</option>
           <option value="vrouw">Vrouw</option>

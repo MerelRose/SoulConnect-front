@@ -8,6 +8,7 @@ const Carousel = () => {
   const API_KEY = '*anker';
   const loggedInUserId = localStorage.getItem('userId');
   const [users, setUsers] = useState([]);
+  const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
     const fetchCompatibility = async () => {
@@ -27,6 +28,26 @@ const Carousel = () => {
     fetchCompatibility();
   }, [loggedInUserId]);
 
+  const fetchUserDetails = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:4200/users/${userId}`, {
+        headers: {
+          'api-key': API_KEY,
+        },
+      });
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        [userId]: response.data,
+      }));
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
+  useEffect(() => {
+    users.forEach((user) => fetchUserDetails(user.user_id));
+  }, [users]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -38,22 +59,23 @@ const Carousel = () => {
   return (
     <div className="p-6 rounded-lg">
       <Slider {...settings}>
-        {users.map((user, index) => (
-          <div key={index} className="p-6 text-center text-white bg-gray-800 rounded-lg">
-            <h2 className="mb-4 text-2xl text-purple-400">{user.username}</h2>
-            <div className="text-left">
-              <p><span className="font-semibold">Email:</span> {user.email}</p>
-              <p><span className="font-semibold">Postcode:</span> {user.postcode}</p>
-              <p><span className="font-semibold">Geboortedatum:</span> {user.geboortedatum}</p>
-              <p><span className="font-semibold">Zoekt:</span> {user.zoekt}</p>
-              <p><span className="font-semibold">Gender:</span> {user.gender}</p>
-              <p><span className="font-semibold">Soort:</span> {user.soort}</p>
-              <p><span className="font-semibold">Huisdier:</span> {user.huisdier}</p>
-              <p><span className="font-semibold">Muziek:</span> {user.muziek}</p>
-              <p><span className="font-semibold">Kinderen:</span> {user.kinderen}</p>
+        {users.map((user, index) => {
+          const details = userDetails[user.user_id];
+          return (
+            <div key={index} className="p-6 text-center text-white bg-gray-800 rounded-lg">
+              <div className="text-left">
+                {details && details.username && <h2 className="pl-8 mb-2 text-8xl font-loveLight">{details.username}</h2>} {/* Voeg de nickname toe */}
+                {/* <p><span className="font-semibold">userid:</span> {user.user_id}</p> */}
+                <p><span className="font-semibold">Zoekt:</span> {user.zoekt}</p>
+                <p><span className="font-semibold">Gender:</span> {user.gender}</p>
+                <p><span className="font-semibold">Soort:</span> {user.soort}</p>
+                <p><span className="font-semibold">Huisdier:</span> {user.huisdier}</p>
+                <p><span className="font-semibold">Muziek:</span> {user.muziek}</p>
+                <p><span className="font-semibold">Kinderen:</span> {user.kinderen}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </Slider>
     </div>
   );
