@@ -23,7 +23,7 @@ function NavBar() {
           <Link to="/dashboard" className="text-white">Dashboard</Link>
         </li>
         <li>
-          <Link to="/info-profiel" className="text-white">Profiel</Link>
+          <Link to="/info-profiel" className="text-white">Profiel Info</Link>
         </li>
         <li>
           <Link to="/delete" className="text-white">Account Verwijderen</Link>

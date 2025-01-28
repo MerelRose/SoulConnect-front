@@ -59,7 +59,7 @@ const Carousel = () => {
   return (
     <div className="p-6 rounded-lg">
       <Slider {...settings}>
-        {users.map((user, index) => {
+        {users.slice(0, 5).map((user, index) => { // Beperk het aantal gebruikers tot 5
           const details = userDetails[user.user_id];
           return (
             <div key={index} className="p-6 text-center text-white bg-gray-800 rounded-lg">
