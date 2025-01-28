@@ -82,8 +82,8 @@ export default function Profile() {
               <div className="text-4xl">{user.username}</div>
               <div className="text-lg font-bold">{leeftijd + " jaar oud"}</div>
               <div className="text-lg font-bold">{profile.one_liner}</div>
-              <div className="text-lg font-bold">is {profile.gender}</div>
-              <div className="text-lg font-bold">voorkeur is {profile.zoekt}</div>
+              <div className="text-lg font-bold">gender is {profile.gender}</div>
+              <div className="text-lg font-bold">is looking for {profile.zoekt}</div>
             </div>
           </div>
           <div className="w-full mt-6">
@@ -110,19 +110,19 @@ export default function Profile() {
 
         </div>
         <div className="w-1/2 h-4/5 p-4 border-4 border-color-white rounded-xl">
-          <div className="text-xl font-bold mt-2">hobbies</div>
+          <div className="text-xl font-bold mt-2">hobbys</div>
           <div className="text-lg mt-1">{profile.intresse}</div>
-          <div className="text-lg mt-4">zoekt voor een {profile.soort}</div>
-          <div className="text-xl font-bold mt-2">huisdieren</div>
+          <div className="text-lg mt-4">is looking for a {profile.soort}</div>
+          <div className="text-xl font-bold mt-2">pets</div>
           <div className="text-lg mt-1">{profile.huisdier}</div>
-          <div className="text-lg mt-4">spreekt {profile.talen}</div>
-          <div className="text-xl font-bold mt-4">beroep</div>
+          <div className="text-lg mt-4">speaks {profile.talen}</div>
+          <div className="text-xl font-bold mt-4">job</div>
           <div className="text-lg mt-1">{profile.beroep}</div>
-          <div className="text-xl font-bold mt-4">doet aan</div>
+          <div className="text-xl font-bold mt-4">plays</div>
           <div className="text-lg mt-1">{profile.sport}</div>
-          <div className="text-xl font-bold mt-4">houd van</div>
+          <div className="text-xl font-bold mt-4">listens to</div>
           <div className="text-lg mt-1">{profile.muziek}</div>
-          <div className="text-xl font-bold mt-4">kinderen</div>
+          <div className="text-xl font-bold mt-4">has children</div>
           <div className="text-lg mt-2">{profile.kinderen}</div>
         </div>
       </div>
