@@ -161,7 +161,7 @@ function Registration({ showModal, setShowModal }) {
                         </form>
                         <button
                             onClick={() => setShowModal(false)}
-                            className="w-full py-2 mt-4 bg-gray-300 rounded-lg hover:bg-gray-400"
+                            className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
                         >
                             Close
                         </button>

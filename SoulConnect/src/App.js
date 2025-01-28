@@ -10,6 +10,7 @@ import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
 import DeleteAccountPage from './Pages/components/delete';
 import NavBar from './Pages/components/navbar';
+import ResetPassword from './Pages/resetpassword';
 import LikesAndMatches from './Pages/likes-matches';
 
 function Header() {
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
           <Route path="/likes&matches" element={<PrivateRoute><LikesAndMatches /></PrivateRoute>} />
           <Route path="/home" element={<Home />} />
+          <Route path="/resetpassword" element={<ResetPassword />}/>
         </Routes>
       </main>
       <Footer />
