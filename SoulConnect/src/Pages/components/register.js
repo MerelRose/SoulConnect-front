@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../../styles/App.css';
+import Voorwaarden from './voorwaarden';
+import { Link } from 'react-router-dom';
 //test
 function Registration({ showModal, setShowModal }) {
     const [formData, setFormData] = useState({
@@ -72,6 +74,8 @@ function Registration({ showModal, setShowModal }) {
             setSuccessMessage('');
         }
     };
+
+    const [showVoorwaarden, setShowVoorwaarden] = useState(false);
 
     return (
         <>
@@ -146,15 +150,23 @@ function Registration({ showModal, setShowModal }) {
                                 type="date"
                                 id="geboortedatum"
                                 name="geboortedatum"
-                                className="w-full p-2 mb-4 border rounded-lg bg-neutral-800"
+                                className="w-full p-2 border mb-4 rounded-lg bg-neutral-800"
                                 value={formData.geboortedatum}
                                 onChange={handleChange}
                                 required
                             />
 
                             <button
+                                type="button"
+                                className="w-full py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 mt-3"
+                                onClick={() => setShowVoorwaarden(true)}
+                            >
+                                voorwaarden
+                            </button>
+
+                            <button
                                 type="submit"
-                                className="w-full py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
+                                className="w-full py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 mt-3"
                             >
                                 Register
                             </button>
@@ -162,6 +174,20 @@ function Registration({ showModal, setShowModal }) {
                         <button
                             onClick={() => setShowModal(false)}
                             className="w-full py-2 mt-4 bg-gray-600 rounded-lg hover:bg-gray-400"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+            {showVoorwaarden && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="p-6 text-white rounded-lg shadow-lg bg-neutral-800 w-96">
+                        <h2 className="mb-4 text-2xl font-semibold">Voorwaarden</h2>
+                        <Voorwaarden />
+                        <button
+                            onClick={() => setShowVoorwaarden(false)}
+                            className="w-full py-2 mt-4 bg-gray-300 rounded-lg hover:bg-gray-400"
                         >
                             Close
                         </button>
