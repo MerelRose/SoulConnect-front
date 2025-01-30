@@ -5,7 +5,7 @@ import Carousel from './components/user-carousel';
 
 const Dashboard = () => {
   const API_KEY = '*anker';
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate
 
   const [users, setUsers] = useState([]);
   const [filters, setFilters] = useState({
@@ -88,7 +88,6 @@ const Dashboard = () => {
     }
   
     try {
-      // Prepare the payload based on the database structure
       const payload = {
         user_id: loggedInUserId,  // Sender's user ID
         reported_id: reportedUserId, // Reported user's ID
@@ -97,14 +96,12 @@ const Dashboard = () => {
   
       console.log("Submitting complaint with the following payload:", payload);
   
-      // Send the request to the API
       await axios.post('http://localhost:4200/meldingen', payload, {
         headers: {
           'api-key': API_KEY,
         },
       });
   
-      // Reset the complaint text and close the popup
       setComplaintText('');
       setReportedUserId(null);
       setComplaintPopupVisible(false);
@@ -156,16 +153,9 @@ const Dashboard = () => {
   return (
     <div className="p-6 h-[400px] sm:h-[500px] md:h-[600px] lg:h-[600px] overflow-y-auto">
       <h1 className="text-white text-8xl font-loveLight">Top5 Voorgestelde Matches</h1>
-        <Carousel />
-        <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
+      <Carousel />
+      <h1 className="text-white text-8xl font-loveLight">Zoek verder</h1>
       <div className="flex items-center mb-4">
-        {/* <input
-          type="text"
-          placeholder="Search by username"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-1/3 p-2 mr-2 border rounded"
-        /> */}
         <select name="zoekt" value={filters.zoekt} onChange={handleFilterChange} className="p-2 mr-2 border rounded">
           <option value="">Zoekt</option>
           <option value="vrouw">Vrouw</option>
@@ -221,14 +211,14 @@ const Dashboard = () => {
       <div className="max-h-[520px] overflow-y-auto">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {users.map((user) => (
-            <div key={user.id} className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-md hover:shadow-lg">
+            <div key={user.id} onClick={() => navigate(`/profiel/${user.id}`)} className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-md hover:shadow-lg">
               <h2 className="text-xl font-semibold">{user.username}</h2>
               <p className="text-gray-700">Email: {user.email}</p>
               <p className="text-gray-700">Postcode: {user.postcode}</p>
               <p className="text-gray-700">Geboortedatum: {user.geboortedatum}</p>
               <div className="mt-4">
                 {likedUsers.includes(user.id) ? (
-                <button onClick={() => handleDislike(user.id)} className="px-4 py-2 mr-2 text-white bg-red-500 rounded">Dislike</button>
+                  <button onClick={() => handleDislike(user.id)} className="px-4 py-2 mr-2 text-white bg-red-500 rounded">Dislike</button>
                 ) : (
                   <button onClick={() => handleLike(user.id)} className="px-4 py-2 mr-2 text-white bg-green-500 rounded">Like</button>
                 )}

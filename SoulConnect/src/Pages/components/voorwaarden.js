@@ -1,5 +1,3 @@
-//kan niet in de site tenzij de header word aangepast
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,16 +9,15 @@ export default function Voorwaarden() {
         const element = e.target;
         const scrollTop = element.scrollTop;
         const scrollHeight = element.scrollHeight - element.clientHeight;
-        const progress = (scrollTop / scrollHeight) * 100;
+        const progress = (scrollTop / scrollHeight) * 100; //pakt hoogte site en de de hoogte waar je nu zit op de pagina en deelt het door 100 voor procenten
         setScrollProgress(progress);
         if (scrollTop + element.clientHeight >= element.scrollHeight) {
             setIsBottom(true);
         } else {
             setIsBottom(false);
         }
-        setScrollProgress(progress);
     };
-    const getTodaysDate = () => {
+    const getTodaysDate = () => { // datum dat de voorwaarden voor het laatst zijn aangepast
         const today = new Date();
         const day = String(today.getDate()).padStart(2, '0');
         const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -100,11 +97,11 @@ export default function Voorwaarden() {
                         <div className="sticky relative w-full h-3 bg-gray-200">
                             <div
                                 className="bg-blue-500 text-white font-bold items-center justify-center rounded flex inline-block mt-5 w-2/5 h-3/5 text-center m-auto"
-                                style={{ width: `${scrollProgress}%` }}
+                                style={{ width: `${scrollProgress}%` }} // past de grote van de progress bar aan op basis van hoe ver je bent met scrollen
                             ></div>
                         </div>
                         <Link
-                            className={`bg-blue-500 text-white font-bold items-center justify-center rounded flex inline-block mt-5 w-2/5 h-3/5 text-center m-auto ${!isBottom ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`bg-blue-500 text-white font-bold items-center justify-center rounded flex inline-block mt-5 w-2/5 h-3/5 text-center m-auto ${!isBottom ? 'opacity-50 cursor-not-allowed' : ''}`} // als de pagina op de bodem is dan kan de gebruiker op de accepteer knop drukken
                             onClick={(e) => {
                                 if (!isBottom) {
                                     e.preventDefault();

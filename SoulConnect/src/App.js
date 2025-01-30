@@ -8,9 +8,11 @@ import Dashboard from './Pages/dashboard';
 import { AuthProvider, useAuth } from './authcontext';
 import Home from './Pages/components/login';
 import UserProfile from './Pages/info-profiel';
+import Profile from'./Pages/components/profiel';
 import DeleteAccountPage from './Pages/components/delete';
 import NavBar from './Pages/components/navbar';
 import ResetPassword from './Pages/resetpassword';
+import Add from './Pages/components/add';
 import LikesAndMatches from './Pages/likes-matches';
 
 function Header() {
@@ -46,7 +48,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="absolute bottom-0 w-screen py-4 bg-gray-950">
+    <footer className="fixed bottom-0 w-full py-4 bg-gray-950">
       <p className="text-center text-white">©2025 SoulConnect, All rights reserved</p>
     </footer>
   );
@@ -69,8 +71,10 @@ const App = () => {
           <Route path="/landing" element={<Landing />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/info-profiel" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+          <Route path="/profiel/:id" element={<Profile />} />
           <Route path="/delete" element={<PrivateRoute><DeleteAccountPage /></PrivateRoute>} />
           <Route path="/likes&matches" element={<PrivateRoute><LikesAndMatches /></PrivateRoute>} />
+          <Route path="/add" element={<Add />} />
           <Route path="/home" element={<Home />} />
           <Route path="/resetpassword" element={<ResetPassword />}/>
         </Routes>
